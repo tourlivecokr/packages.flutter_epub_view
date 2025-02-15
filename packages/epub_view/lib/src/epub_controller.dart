@@ -4,10 +4,12 @@ class EpubController {
   EpubController({
     required this.document,
     this.epubCfi,
+    this.isEpubDemo = false,
   });
 
   Future<EpubBook> document;
   final String? epubCfi;
+  final bool isEpubDemo;
 
   _EpubViewState? _epubViewState;
   List<EpubViewChapter>? _cacheTableOfContents;
