@@ -33,50 +33,48 @@ List<dom.Element> _removeAllDiv(List<dom.Element> elements) {
 }
 
 ParseParagraphsResult parseParagraphs(
-  List<EpubChapter> chapters,
-  EpubContent? content,
-) {
+    List<EpubChapter> chapters,
+    EpubContent? content,
+    ) {
   String? filename = '';
   final List<int> chapterIndexes = [];
-  final paragraphs = chapters.fold<List<Paragraph>>(
-    [],
-    (acc, next) {
-      List<dom.Element> elmList = [];
-      if (filename != next.ContentFileName) {
-        filename = next.ContentFileName;
-        final document = EpubCfiReader().chapterDocument(next);
-        if (document != null) {
-          final result = convertDocumentToElements(document);
-          elmList = _removeAllDiv(result);
-        }
-      }
+  final List<Paragraph> paragraphs = [];
 
-      if (next.Anchor == null) {
-        // last element from document index as chapter index
-        chapterIndexes.add(acc.length);
-        acc.addAll(elmList
-            .map((element) => Paragraph(element, chapterIndexes.length - 1)));
-        return acc;
-      } else {
-        final index = elmList.indexWhere(
-          (elm) => elm.outerHtml.contains(
-            'id="${next.Anchor}"',
-          ),
-        );
-        if (index == -1) {
-          chapterIndexes.add(acc.length);
-          acc.addAll(elmList
-              .map((element) => Paragraph(element, chapterIndexes.length - 1)));
-          return acc;
-        }
+  List<dom.Element> elmList = [];
+  for (var next in chapters) {
 
-        chapterIndexes.add(index);
-        acc.addAll(elmList
-            .map((element) => Paragraph(element, chapterIndexes.length - 1)));
-        return acc;
+    // 1️⃣ 같은 파일인지 확인하고, 새로 로드
+    if (filename != next.ContentFileName) {
+      filename = next.ContentFileName;
+      final document = EpubCfiReader().chapterDocument(next);
+      if (document != null) {
+        final result = convertDocumentToElements(document);
+        elmList = _removeAllDiv(result);
       }
-    },
-  );
+    }
+
+    // 2️⃣ 단일 파일에서 챕터 ID 찾기 (헤딩 태그 기반)
+    int chapterStartIndex = paragraphs.length; // 현재까지의 Paragraph 개수 저장
+    if (next.Anchor != null) {
+      final index = elmList.indexWhere(
+            (elm) => elm.outerHtml.contains('id="${next.Anchor}"'),
+      );
+
+      // 앵커가 문서에서 존재하지 않는다면, 그냥 현재 인덱스 사용
+      chapterStartIndex = (index != -1) ? chapterStartIndex + index : chapterStartIndex;
+    } else {
+      // 앵커가 없다면, 챕터의 첫 번째 문단부터 시작
+      chapterStartIndex = 0;
+    }
+
+    // 3️⃣ `chapterIndexes`에 챕터 시작 위치 추가
+    chapterIndexes.add(chapterStartIndex);
+
+    // 4️⃣ 문서 전체를 paragraphs 리스트에 추가 (각 챕터 별 인덱스 포함)
+    paragraphs.addAll(
+      elmList.map((element) => Paragraph(element, chapterIndexes.length - 1)),
+    );
+  }
 
   return ParseParagraphsResult(paragraphs, chapterIndexes);
 }
