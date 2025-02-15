@@ -41,6 +41,7 @@ ParseParagraphsResult parseParagraphs(
   final List<Paragraph> paragraphs = [];
 
   List<dom.Element> elmList = [];
+  bool isParagraphAdd = false;
   for (var next in chapters) {
 
     // 1️⃣ 같은 파일인지 확인하고, 새로 로드
@@ -50,6 +51,7 @@ ParseParagraphsResult parseParagraphs(
       if (document != null) {
         final result = convertDocumentToElements(document);
         elmList = _removeAllDiv(result);
+        isParagraphAdd = false;
       }
     }
 
@@ -71,9 +73,12 @@ ParseParagraphsResult parseParagraphs(
     chapterIndexes.add(chapterStartIndex);
 
     // 4️⃣ 문서 전체를 paragraphs 리스트에 추가 (각 챕터 별 인덱스 포함)
-    paragraphs.addAll(
-      elmList.map((element) => Paragraph(element, chapterIndexes.length - 1)),
-    );
+    if (isParagraphAdd == false) {
+      paragraphs.addAll(
+        elmList.map((element) => Paragraph(element, chapterIndexes.length - 1)),
+      );
+      isParagraphAdd = true;
+    }
   }
 
   return ParseParagraphsResult(paragraphs, chapterIndexes);
