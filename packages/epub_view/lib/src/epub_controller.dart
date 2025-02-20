@@ -26,8 +26,10 @@ class EpubController {
 
   void setEpubDemo(bool value) {
     isEpubDemo = value;
-    loadingState.value = EpubViewLoadingState.loading;
-    loadingState.value = EpubViewLoadingState.success;
+    if (loadingState.value == EpubViewLoadingState.success) {
+      loadingState.value = EpubViewLoadingState.loading;
+      loadingState.value = EpubViewLoadingState.success;
+    }
   }
 
   void jumpTo({required int index, double alignment = 0}) =>
