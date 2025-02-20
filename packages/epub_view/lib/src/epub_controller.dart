@@ -4,12 +4,11 @@ class EpubController {
   EpubController({
     required this.document,
     this.epubCfi,
-    this.isEpubDemo = false,
   });
 
   Future<EpubBook> document;
   final String? epubCfi;
-  final bool isEpubDemo;
+  bool isEpubDemo = false;
 
   _EpubViewState? _epubViewState;
   List<EpubViewChapter>? _cacheTableOfContents;
@@ -24,6 +23,12 @@ class EpubController {
   final currentValueListenable = ValueNotifier<EpubChapterViewValue?>(null);
 
   final tableOfContentsListenable = ValueNotifier<List<EpubViewChapter>>([]);
+
+  void setEpubDemo(bool value) {
+    isEpubDemo = value;
+    loadingState.value = EpubViewLoadingState.loading;
+    loadingState.value = EpubViewLoadingState.success;
+  }
 
   void jumpTo({required int index, double alignment = 0}) =>
       _epubViewState?._itemScrollController?.jumpTo(
