@@ -28,6 +28,7 @@ class EpubView extends StatefulWidget {
     this.onChapterChanged,
     this.onDocumentLoaded,
     this.onDocumentError,
+    this.onLastItem,
     this.builders = const EpubViewBuilders<DefaultBuilderOptions>(
       options: DefaultBuilderOptions(),
     ),
@@ -45,6 +46,8 @@ class EpubView extends StatefulWidget {
 
   /// Called when a document loading error
   final void Function(Exception? error)? onDocumentError;
+
+  final void Function()? onLastItem;
 
   /// Builders
   final EpubViewBuilders builders;
@@ -141,6 +144,17 @@ class _EpubViewState extends State<EpubView> {
     );
     _controller.currentValueListenable.value = _currentValue;
     widget.onChapterChanged?.call(_currentValue);
+
+    // 끝까지 읽었는지 체크
+    final positions = _itemPositionListener!.itemPositions.value;
+
+    if (positions.isNotEmpty) {
+      final lastItem = positions.last;
+      if (lastItem.itemTrailingEdge <= 1.0) {
+        // 마지막 아이템이 완전히 화면에 보일 때
+        _controller.onLastItem?.call();
+      }
+    }
   }
 
   void _gotoEpubCfi(
