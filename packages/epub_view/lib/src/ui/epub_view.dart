@@ -152,7 +152,7 @@ class _EpubViewState extends State<EpubView> {
       final lastItem = positions.last;
       if (lastItem.itemTrailingEdge <= 1.0) {
         // 마지막 아이템이 완전히 화면에 보일 때
-        _controller.onLastItem?.call();
+        widget.onLastItem?.call();
       }
     }
   }
