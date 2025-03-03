@@ -334,7 +334,7 @@ class _EpubViewState extends State<EpubView> {
     final options = defaultBuilder.options;
 
     return Container(
-      color: options.backgroundColor,
+      decoration: BoxDecoration(color: options.backgroundColor),
       child: Column(
         children: <Widget>[
           if (chapterIndex >= 0 && paragraphIndex == 0)
