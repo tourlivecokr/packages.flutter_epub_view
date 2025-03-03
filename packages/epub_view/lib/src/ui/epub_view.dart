@@ -334,7 +334,7 @@ class _EpubViewState extends State<EpubView> {
     final options = defaultBuilder.options;
 
     return Container(
-      decoration: BoxDecoration(color: options.backgroundColor),
+      //decoration: BoxDecoration(color: options.backgroundColor),
       child: Column(
         children: <Widget>[
           if (chapterIndex >= 0 && paragraphIndex == 0)
@@ -350,6 +350,7 @@ class _EpubViewState extends State<EpubView> {
                   bottom: (options.paragraphPadding as EdgeInsets?)?.bottom,
                   left: (options.paragraphPadding as EdgeInsets?)?.left,
                 ),
+                backgroundColor: options.backgroundColor,
               ).merge(Style.fromTextStyle(options.textStyle)),
             },
             extensions: [
