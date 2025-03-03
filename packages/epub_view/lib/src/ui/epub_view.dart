@@ -313,22 +313,7 @@ class _EpubViewState extends State<EpubView> {
     return posIndex;
   }
 
-  static Widget _chapterDividerBuilder(EpubChapter chapter) => Container(
-        height: 56,
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Color(0x24000000),
-        ),
-        alignment: Alignment.centerLeft,
-        child: Text(
-          chapter.Title ?? '',
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      );
+  static Widget _chapterDividerBuilder(EpubChapter chapter) => Container();
 
   static Widget _chapterBuilder(
     BuildContext context,
@@ -348,39 +333,42 @@ class _EpubViewState extends State<EpubView> {
     final defaultBuilder = builders as EpubViewBuilders<DefaultBuilderOptions>;
     final options = defaultBuilder.options;
 
-    return Column(
-      children: <Widget>[
-        if (chapterIndex >= 0 && paragraphIndex == 0)
-          builders.chapterDividerBuilder(chapters[chapterIndex]),
-        Html(
-          data: paragraphs[index].element.outerHtml,
-          onLinkTap: (href, _, __) => onExternalLinkPressed(href!),
-          style: {
-            'html': Style(
-              padding: HtmlPaddings.only(
-                top: (options.paragraphPadding as EdgeInsets?)?.top,
-                right: (options.paragraphPadding as EdgeInsets?)?.right,
-                bottom: (options.paragraphPadding as EdgeInsets?)?.bottom,
-                left: (options.paragraphPadding as EdgeInsets?)?.left,
+    return Container(
+      color: options.backgroundColor,
+      child: Column(
+        children: <Widget>[
+          if (chapterIndex >= 0 && paragraphIndex == 0)
+            builders.chapterDividerBuilder(chapters[chapterIndex]),
+          Html(
+            data: paragraphs[index].element.outerHtml,
+            onLinkTap: (href, _, __) => onExternalLinkPressed(href!),
+            style: {
+              'html': Style(
+                padding: HtmlPaddings.only(
+                  top: (options.paragraphPadding as EdgeInsets?)?.top,
+                  right: (options.paragraphPadding as EdgeInsets?)?.right,
+                  bottom: (options.paragraphPadding as EdgeInsets?)?.bottom,
+                  left: (options.paragraphPadding as EdgeInsets?)?.left,
+                ),
+              ).merge(Style.fromTextStyle(options.textStyle)),
+            },
+            extensions: [
+              TagExtension(
+                tagsToExtend: {"img"},
+                builder: (imageContext) {
+                  final url =
+                      imageContext.attributes['src']!.replaceAll('../', '');
+                  final content = Uint8List.fromList(
+                      document.Content!.Images![url]!.Content!);
+                  return Image(
+                    image: MemoryImage(content),
+                  );
+                },
               ),
-            ).merge(Style.fromTextStyle(options.textStyle)),
-          },
-          extensions: [
-            TagExtension(
-              tagsToExtend: {"img"},
-              builder: (imageContext) {
-                final url =
-                    imageContext.attributes['src']!.replaceAll('../', '');
-                final content = Uint8List.fromList(
-                    document.Content!.Images![url]!.Content!);
-                return Image(
-                  image: MemoryImage(content),
-                );
-              },
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 

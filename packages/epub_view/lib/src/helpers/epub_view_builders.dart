@@ -69,6 +69,7 @@ class DefaultBuilderOptions {
   final EdgeInsetsGeometry chapterPadding;
   final EdgeInsetsGeometry paragraphPadding;
   final TextStyle textStyle;
+  final Color backgroundColor;
 
   const DefaultBuilderOptions({
     this.loaderSwitchDuration = const Duration(seconds: 1),
@@ -79,6 +80,7 @@ class DefaultBuilderOptions {
       height: 1.25,
       fontSize: 16,
     ),
+    this.backgroundColor = Colors.white,
   });
 
   static Widget _transitionBuilder(Widget child, Animation<double> animation) =>
