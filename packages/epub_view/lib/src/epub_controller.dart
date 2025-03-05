@@ -110,6 +110,7 @@ class EpubController {
 
   void dispose() {
     _epubViewState = null;
+    _document = null;
     isBookLoaded.dispose();
     currentValueListenable.dispose();
     tableOfContentsListenable.dispose();
