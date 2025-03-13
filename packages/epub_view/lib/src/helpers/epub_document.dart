@@ -19,6 +19,7 @@ class EpubDocument {
 
   static Future<EpubBook> openFile(File file) async {
     final bytes = await file.readAsBytes();
-    return compute(EpubReader.readBook, bytes);
+    return EpubReader.readBook(bytes);
+    //return compute(EpubReader.readBook, bytes);
   }
 }
