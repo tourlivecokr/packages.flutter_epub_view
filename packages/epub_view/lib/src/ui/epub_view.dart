@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart' show IterableExtension;
@@ -353,7 +354,7 @@ class _EpubViewState extends State<EpubView> {
               ).merge(Style.fromTextStyle(options.textStyle)),
             },
             extensions: [
-              TagExtension(
+              /*TagExtension(
                 tagsToExtend: {"img"},
                 builder: (imageContext) {
                   final url =
@@ -363,6 +364,13 @@ class _EpubViewState extends State<EpubView> {
                   return Image(
                     image: MemoryImage(content),
                   );
+                },
+              ),*/
+              TagExtension(
+                tagsToExtend: {"img"},
+                builder: (imageContext) {
+                  final url = imageContext.attributes['src']!.replaceAll('../', '');
+                  return Image.file(File(document.Content!.Images![url]!.imagePath!));
                 },
               ),
             ],
