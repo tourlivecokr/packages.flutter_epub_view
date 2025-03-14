@@ -64,7 +64,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
 
     if (targetIndex != -1) {
       _scrollController.animateTo(
-        targetIndex * 44.0 + 100, // 📌 ListTile 높이를 고려한 이동
+        targetIndex * 44.0 - 500 < 0 ? 0 : targetIndex * 44.0 - 500, // 📌 ListTile 높이를 고려한 이동
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
@@ -95,23 +95,21 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
 
                 return Container(
                   height: 44, // 높이 44 고정
-                  alignment: Alignment.center, // 센터 정렬
-                  child: ListTile(
-                    title: Center(
-                      child: Text(
-                        tableOfContents[index].title!.trim(),
-                        textAlign: TextAlign.center, // 텍스트 중앙 정렬
-                        maxLines: 2, // 최대 2줄
-                        overflow: TextOverflow.ellipsis, // 넘치면 "..."
-                        style: TextStyle(
-                          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                          color: isActive ? Colors.blue : Colors.black,
-                        ),
+                  alignment: Alignment.centerLeft, // 센터 정렬
+                  child: InkWell(
+                    onTap: () {
+                      widget.controller.scrollTo(index: tableOfContents[index].startIndex)
+                    },
+                    child: Text(
+                      tableOfContents[index].title!.trim(),
+                      maxLines: 1, // 최대 1줄
+                      overflow: TextOverflow.ellipsis, // 넘치면 "..."
+                      style: TextStyle(
+                        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                        color: isActive ? Colors.blue : Colors.black,
                       ),
                     ),
-                    onTap: () => widget.controller.scrollTo(index: tableOfContents[index].startIndex),
-                    selected: isActive,
-                  ),
+                  );
                 );
               },
               itemCount: tableOfContents.length,
