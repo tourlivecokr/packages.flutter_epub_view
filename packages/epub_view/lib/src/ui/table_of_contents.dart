@@ -64,7 +64,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
 
     if (targetIndex != -1) {
       _scrollController.animateTo(
-        targetIndex * 50.0, // 📌 ListTile 높이를 고려한 이동
+        targetIndex * 44.0 + 100, // 📌 ListTile 높이를 고려한 이동
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
@@ -93,16 +93,25 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
                     (index == tableOfContents.length - 1 ||
                         currentValue!.position.index < tableOfContents[index + 1].startIndex);
 
-                return ListTile(
-                  title: Text(
-                    tableOfContents[index].title!.trim(),
-                    style: TextStyle(
-                      fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                      color: isActive ? Colors.blue : Colors.black,
+                return Container(
+                  height: 44, // 높이 44 고정
+                  alignment: Alignment.center, // 센터 정렬
+                  child: ListTile(
+                    title: Center(
+                      child: Text(
+                        tableOfContents[index].title!.trim(),
+                        textAlign: TextAlign.center, // 텍스트 중앙 정렬
+                        maxLines: 2, // 최대 2줄
+                        overflow: TextOverflow.ellipsis, // 넘치면 "..."
+                        style: TextStyle(
+                          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                          color: isActive ? Colors.blue : Colors.black,
+                        ),
+                      ),
                     ),
+                    onTap: () => widget.controller.scrollTo(index: tableOfContents[index].startIndex),
+                    selected: isActive,
                   ),
-                  onTap: () => widget.controller.scrollTo(index: tableOfContents[index].startIndex),
-                  selected: isActive, // ✅ 활성화 상태 적용
                 );
               },
               itemCount: tableOfContents.length,
