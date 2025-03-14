@@ -85,7 +85,6 @@ class EpubController {
       return [];
     }
 
-    int offset = 0;
     int index = -1;
 
     return _cacheTableOfContents =
@@ -93,12 +92,11 @@ class EpubController {
       [],
       (acc, next) {
         index += 1;
-        acc.add(EpubViewChapter(next.Title, _getChapterStartIndex(index, offset)));
+        acc.add(EpubViewChapter(next.Title, _getChapterStartIndex(index)));
         for (final subChapter in next.SubChapters!) {
           index += 1;
-          acc.add(EpubViewSubChapter(subChapter.Title, _getChapterStartIndex(index, offset)));
+          acc.add(EpubViewSubChapter(subChapter.Title, _getChapterStartIndex(index)));
         }
-        offset = acc.last.startIndex;
         return acc;
       },
     );
@@ -133,9 +131,9 @@ class EpubController {
     }
   }
 
-  int _getChapterStartIndex(int index, int offset) =>
+  int _getChapterStartIndex(int index) =>
       index < _epubViewState!._chapterIndexes.length
-          ? _epubViewState!._chapterIndexes[index] + offset
+          ? _epubViewState!._chapterIndexes[index]
           : 0;
 
   void _attach(_EpubViewState epubReaderViewState) {
