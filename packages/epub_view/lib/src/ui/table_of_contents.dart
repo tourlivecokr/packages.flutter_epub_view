@@ -63,7 +63,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
             currentIndex < tableOfContents[tableOfContents.indexOf(chapter) + 1].startIndex));
 
     if (targetIndex != -1) {
-      final offset = MediaQuery.of(context).size.height * 0.7;
+      final offset = MediaQuery.of(context).size.height;
       _scrollController.animateTo(
         targetIndex * 44.0 - offset < 0 ? 0 : targetIndex * 44.0 - offset, // 📌 ListTile 높이를 고려한 이동
         duration: const Duration(milliseconds: 300),
@@ -94,14 +94,14 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
                     (index == tableOfContents.length - 1 ||
                         currentValue!.position.index < tableOfContents[index + 1].startIndex);
 
-                return Container(
-                  height: 44, // 높이 44 고정
-                  alignment: Alignment.centerLeft, // 센터 정렬
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: InkWell(
-                    onTap: () {
-                      widget.controller.scrollTo(index: tableOfContents[index].startIndex);
-                    },
+                return InkWell(
+                  onTap: () {
+                    widget.controller.scrollTo(index: tableOfContents[index].startIndex);
+                  },
+                  child: Container(
+                    height: 44, // 높이 44 고정
+                    alignment: Alignment.centerLeft, // 센터 정렬
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       tableOfContents[index].title!.trim(),
                       maxLines: 1, // 최대 1줄
@@ -110,8 +110,8 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
                         fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                         color: isActive ? Colors.blue : Colors.black,
                       ),
-                    ),
-                  )
+                    )
+                  ),
                 );
               },
               itemCount: tableOfContents.length,
