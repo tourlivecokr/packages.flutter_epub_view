@@ -63,7 +63,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
             currentIndex < tableOfContents[tableOfContents.indexOf(chapter) + 1].startIndex));
 
     if (targetIndex != -1) {
-      final offset = MediaQuery.of(context).size.height;
+      final offset = MediaQuery.of(context).size.height * 0.3;
       _scrollController.animateTo(
         targetIndex * 44.0 - offset < 0 ? 0 : targetIndex * 44.0 - offset, // 📌 ListTile 높이를 고려한 이동
         duration: const Duration(milliseconds: 300),
