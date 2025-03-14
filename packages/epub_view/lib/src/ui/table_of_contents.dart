@@ -98,7 +98,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
                   alignment: Alignment.centerLeft, // 센터 정렬
                   child: InkWell(
                     onTap: () {
-                      widget.controller.scrollTo(index: tableOfContents[index].startIndex)
+                      widget.controller.scrollTo(index: tableOfContents[index].startIndex);
                     },
                     child: Text(
                       tableOfContents[index].title!.trim(),
@@ -109,7 +109,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
                         color: isActive ? Colors.blue : Colors.black,
                       ),
                     ),
-                  );
+                  )
                 );
               },
               itemCount: tableOfContents.length,
