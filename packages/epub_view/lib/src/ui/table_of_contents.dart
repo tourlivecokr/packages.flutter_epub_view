@@ -63,8 +63,9 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
             currentIndex < tableOfContents[tableOfContents.indexOf(chapter) + 1].startIndex));
 
     if (targetIndex != -1) {
+      final offset = MediaQuery.of(context).size.height * 0.7;
       _scrollController.animateTo(
-        targetIndex * 44.0 - 500 < 0 ? 0 : targetIndex * 44.0 - 500, // 📌 ListTile 높이를 고려한 이동
+        targetIndex * 44.0 - offset < 0 ? 0 : targetIndex * 44.0 - offset, // 📌 ListTile 높이를 고려한 이동
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
@@ -96,6 +97,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
                 return Container(
                   height: 44, // 높이 44 고정
                   alignment: Alignment.centerLeft, // 센터 정렬
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: InkWell(
                     onTap: () {
                       widget.controller.scrollTo(index: tableOfContents[index].startIndex);
