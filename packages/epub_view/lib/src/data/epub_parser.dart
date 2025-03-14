@@ -53,7 +53,7 @@ ParseParagraphsResult parseParagraphs(
         final result = convertDocumentToElements(document);
         elmList = _removeAllDiv(result);
         paragraphs.addAll(
-          elmList.map((element) => Paragraph(element, chapterIndexes.length - 1)),
+          elmList.map((element) => Paragraph(element, chapterIndexes.length)),
         );
         lastChapterIndex += thisChapterLength;
         thisChapterLength = elmList.length;
