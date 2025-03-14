@@ -60,8 +60,22 @@ ParseParagraphsResult parseParagraphs(
       }
     }
 
+    // 2️⃣ 단일 파일에서 챕터 ID 찾기 (헤딩 태그 기반)
+    int chapterStartIndex = lastChapterIndex; // 현재까지의 Paragraph 개수 저장
+    if (next.Anchor != null) {
+      final index = elmList.indexWhere(
+            (elm) => elm.outerHtml.contains('id="${next.Anchor}"'),
+      );
+
+      // 앵커가 문서에서 존재하지 않는다면, 그냥 현재 인덱스 사용
+      chapterStartIndex = (index != -1) ? chapterStartIndex + index : chapterStartIndex;
+    } else {
+      // 앵커가 없다면, 챕터의 첫 번째 문단부터 시작
+      lastChapterIndex = 0;
+    }
+
     // 3️⃣ `chapterIndexes`에 챕터 시작 위치 추가
-    chapterIndexes.add(lastChapterIndex);
+    chapterIndexes.add(chapterStartIndex);
   }
 
   return ParseParagraphsResult(paragraphs, chapterIndexes);
