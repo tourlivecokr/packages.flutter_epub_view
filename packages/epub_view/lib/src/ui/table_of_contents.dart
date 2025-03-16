@@ -97,6 +97,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfContents> {
                 return InkWell(
                   onTap: () {
                     widget.controller.scrollTo(index: tableOfContents[index].startIndex);
+                    Navigator.of(context).pop();
                   },
                   child: Container(
                     height: 44, // 높이 44 고정
