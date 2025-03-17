@@ -120,13 +120,23 @@ class EpubController {
     try {
       loadingState.value = EpubViewLoadingState.loading;
       _document = await document;
-      await _epubViewState!._init();
-      tableOfContentsListenable.value = tableOfContents();
-      loadingState.value = EpubViewLoadingState.success;
+
+      // _epubViewState가 null인지 확인 후 초기화
+      if (_epubViewState != null) {
+        await _epubViewState!._init();
+        tableOfContentsListenable.value = tableOfContents();
+        loadingState.value = EpubViewLoadingState.success;
+      } else {
+        throw Exception('EpubViewState is not initialized.');
+      }
     } catch (error) {
-      _epubViewState!._loadingError = error is Exception
-          ? error
-          : Exception('An unexpected error occurred');
+      // _epubViewState가 null이면 _loadingError를 설정하지 않도록 처리
+      if (_epubViewState != null) {
+        _epubViewState!._loadingError = error is Exception
+            ? error
+            : Exception('An unexpected error occurred');
+      }
+
       loadingState.value = EpubViewLoadingState.error;
     }
   }
