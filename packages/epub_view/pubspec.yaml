@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   epubx:
     git:
-      url: https://github.com/mjjang88/epubx.dart.git
+      url: https://github.com/tourlivecokr/epubx.dart.git
   equatable: ^2.0.5
   html: ^0.15.4
   flutter_html: ^3.0.0-beta.2
