@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:epub_view/src/data/epub_cfi_reader.dart';
 import 'package:epub_view/src/data/epub_parser.dart';
 import 'package:epub_view/src/data/models/chapter.dart';
@@ -370,7 +371,12 @@ class _EpubViewState extends State<EpubView> {
                 tagsToExtend: {"img"},
                 builder: (imageContext) {
                   final url = imageContext.attributes['src']!.replaceAll('../', '');
-                  return Image.file(File(document.Content!.Images![url]!.imagePath!));
+                  return InkWell(
+                    onTap: () {
+                      showImageViewer(context, Image.file(File(document.Content!.Images![url]!.imagePath!)).image);
+                    },
+                    child: Image.file(File(document.Content!.Images![url]!.imagePath!))
+                  );
                 },
               ),
             ],
