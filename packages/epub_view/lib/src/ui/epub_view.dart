@@ -379,6 +379,24 @@ class _EpubViewState extends State<EpubView> {
                   );
                 },
               ),
+              TagExtension(
+                tagsToExtend: {"span"},
+                builder: (spanContext) {
+                  final text = spanContext.element?.text ?? '';
+
+                  return InkWell(
+                    onTap: () {
+
+                    },
+                    child: Text(
+                      text,
+                      style: options.textStyle.copyWith(
+                        backgroundColor: Color(0xFFFF6B6B).withOpacity(0.4),
+                      ),
+                    ),
+                  );
+                }
+              )
             ],
           ),
         ],
