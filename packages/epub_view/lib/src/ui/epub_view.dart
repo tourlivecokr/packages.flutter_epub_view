@@ -382,7 +382,7 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"span"},
                 builder: (spanContext) {
-                  final text = spanContext.element?.text ?? '';
+                  final text = spanContext.element?.text ?? spanContext.attributes['data-tracktitle'] ?? '';
 
                   return InkWell(
                     onTap: () {
