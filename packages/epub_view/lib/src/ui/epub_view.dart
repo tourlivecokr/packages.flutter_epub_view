@@ -380,7 +380,7 @@ class _EpubViewState extends State<EpubView> {
                 },
               ),
               TagExtension(
-                tagsToExtend: {"span"},
+                tagsToExtend: {"recommend"},
                 builder: (spanContext) {
                   final text = spanContext.element?.text ?? spanContext.attributes['data-tracktitle'] ?? '';
 
@@ -391,7 +391,7 @@ class _EpubViewState extends State<EpubView> {
                     child: Text(
                       text,
                       style: options.textStyle.copyWith(
-                        backgroundColor: Color(0xFFFF6B6B).withOpacity(0.4),
+                        backgroundColor: const Color(0xFFFF6B6B).withOpacity(0.4),
                       ),
                     ),
                   );
