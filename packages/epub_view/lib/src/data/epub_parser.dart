@@ -1,4 +1,5 @@
 import 'package:epub_view/src/data/epub_cfi_reader.dart';
+import 'package:epub_view/src/data/models/recommend.dart';
 import 'package:html/dom.dart' as dom;
 
 import 'models/paragraph.dart';
@@ -39,6 +40,7 @@ ParseParagraphsResult parseParagraphs(
   String? filename = '';
   final List<int> chapterIndexes = [];
   final List<Paragraph> paragraphs = [];
+  final List<Recommend> recommends = [];
 
   List<dom.Element> elmList = [];
   int lastChapterIndex = 0;
@@ -52,6 +54,13 @@ ParseParagraphsResult parseParagraphs(
       if (document != null) {
         final result = convertDocumentToElements(document);
         elmList = _removeAllDiv(result);
+
+        elmList.asMap().forEach((i, element) {
+          if (element.localName == 'recommend') {
+            recommends.add(Recommend(element, chapterIndexes[chapterIndexes.length - 1] + i));
+          }
+        });
+
         paragraphs.addAll(
           elmList.map((element) => Paragraph(element, chapterIndexes.length)),
         );
@@ -75,12 +84,13 @@ ParseParagraphsResult parseParagraphs(
     chapterIndexes.add(chapterStartIndex);
   }
 
-  return ParseParagraphsResult(paragraphs, chapterIndexes);
+  return ParseParagraphsResult(paragraphs, chapterIndexes, recommends);
 }
 
 class ParseParagraphsResult {
-  ParseParagraphsResult(this.flatParagraphs, this.chapterIndexes);
+  ParseParagraphsResult(this.flatParagraphs, this.chapterIndexes, this.recommends);
 
   final List<Paragraph> flatParagraphs;
   final List<int> chapterIndexes;
+  final List<Recommend> recommends;
 }

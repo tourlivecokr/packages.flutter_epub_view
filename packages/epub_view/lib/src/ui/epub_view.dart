@@ -9,6 +9,7 @@ import 'package:epub_view/src/data/epub_parser.dart';
 import 'package:epub_view/src/data/models/chapter.dart';
 import 'package:epub_view/src/data/models/chapter_view_value.dart';
 import 'package:epub_view/src/data/models/paragraph.dart';
+import 'package:epub_view/src/data/models/recommend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -67,6 +68,7 @@ class _EpubViewState extends State<EpubView> {
   EpubCfiReader? _epubCfiReader;
   EpubChapterViewValue? _currentValue;
   final _chapterIndexes = <int>[];
+  final _recommends = <Recommend>[];
 
   EpubController get _controller => widget.controller;
 
@@ -110,6 +112,7 @@ class _EpubViewState extends State<EpubView> {
         parseParagraphs(_chapters, _controller._document!.Content);
     _paragraphs = parseParagraphsResult.flatParagraphs;
     _chapterIndexes.addAll(parseParagraphsResult.chapterIndexes);
+    _recommends.addAll(parseParagraphsResult.recommends);
 
     _epubCfiReader = EpubCfiReader.parser(
       cfiInput: _controller.epubCfi,

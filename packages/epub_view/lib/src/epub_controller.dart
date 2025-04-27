@@ -24,6 +24,8 @@ class EpubController {
 
   final tableOfContentsListenable = ValueNotifier<List<EpubViewChapter>>([]);
 
+  final recommendsListenable = ValueNotifier<List<Recommend>>([]);
+
   void setEpubDemo(bool value) {
     isEpubDemo = value;
     if (loadingState.value == EpubViewLoadingState.success) {
@@ -125,6 +127,7 @@ class EpubController {
       if (_epubViewState != null) {
         await _epubViewState!._init();
         tableOfContentsListenable.value = tableOfContents();
+        recommendsListenable.value = _epubViewState!._recommends;
         loadingState.value = EpubViewLoadingState.success;
       } else {
         throw Exception('EpubViewState is not initialized.');
