@@ -57,7 +57,7 @@ ParseParagraphsResult parseParagraphs(
 
         elmList.asMap().forEach((i, element) {
           if (element.localName == 'recommend') {
-            recommends.add(Recommend(element, chapterIndexes[chapterIndexes.length - 1] + i));
+            recommends.add(Recommend(element, chapterIndexes.isEmpty ? i : chapterIndexes[chapterIndexes.length - 1] + i));
           }
         });
 
