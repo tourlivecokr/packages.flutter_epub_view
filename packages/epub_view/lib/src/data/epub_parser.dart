@@ -55,14 +55,13 @@ ParseParagraphsResult parseParagraphs(
         final result = convertDocumentToElements(document);
         elmList = _removeAllDiv(result);
 
-        elmList.asMap().forEach((i, element) {
-          if (element.localName == 'recommend') {
-            recommends.add(Recommend(element, chapterIndexes.isEmpty ? i : chapterIndexes[chapterIndexes.length - 1] + i));
-          }
-        });
-
         paragraphs.addAll(
-          elmList.map((element) => Paragraph(element, chapterIndexes.length)),
+          elmList.map((element) {
+            if (element.localName == 'recommend') {
+              recommends.add(Recommend(element, paragraphs.length));
+            }
+            return Paragraph(element, chapterIndexes.length);
+          }),
         );
         lastChapterIndex += thisChapterLength;
         thisChapterLength = elmList.length;
