@@ -385,17 +385,119 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"recommend"},
                 builder: (spanContext) {
-                  final text = spanContext.element?.text ?? spanContext.attributes['data-tracktitle'] ?? '';
+                  final text = spanContext.element?.text ?? '';
+                  final trackTitle = spanContext.attributes['data-tracktitle'] ?? '';
 
-                  return InkWell(
-                    onTap: () {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 30),
+                    child: Row(
+                      children: [
+                        Image.network('', width: 32, height: 32,),
+                        const SizedBox(width: 5,),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 8,),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 13,
+                                    height: 13,
+                                    child: CustomPaint(
+                                      painter: TrianglePainter(),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(15),
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xffF9F9F9),
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(20),
+                                        bottomLeft: Radius.circular(20),
+                                        bottomRight: Radius.circular(20),
+                                      )
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('가이드 꿀팁!',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xffFF730D),
+                                            height: 20.0 / 15.0
+                                          ),
+                                        ),
+                                        Text(text,
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xffFF730D),
+                                            height: 20.0 / 15.0
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4,),
+                                        Text(trackTitle,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color(0xff1A1A1A),
+                                            height: 18.0 / 14.0
+                                          ),
+                                        ),
+                                        const SizedBox(height: 15,),
+                                        InkWell(
+                                          onTap: () {
 
-                    },
-                    child: Text(
-                      text,
-                      style: options.textStyle.copyWith(
-                        backgroundColor: const Color(0xFFFF6B6B).withOpacity(0.4),
-                      ),
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  offset: const Offset(0, 2),
+                                                  blurRadius: 4,
+                                                  color: Colors.black.withOpacity(0.05)
+                                                )
+                                              ]
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 24,
+                                                  height: 24,
+                                                  decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Color(0xffFF730D)
+                                                  ),
+                                                  child: const Center(
+                                                    child: Icon(Icons.play_arrow, size: 14),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 10,),
+                                                const Text('가이드 설명 듣기',
+                                                  style: TextStyle(
+                                                  fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xffFF730D),
+                                                    height: 18.0 / 14.0
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          )
+                        )
+                      ],
                     ),
                   );
                 }
@@ -481,4 +583,24 @@ class _EpubViewState extends State<EpubView> {
       _loadingError,
     );
   }
+}
+
+class TrianglePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.fill;
+
+    final path = Path()
+      ..moveTo(0, 0)                 // 좌상
+      ..lineTo(size.width, 0)        // 우상
+      ..lineTo(size.width, size.height) // 우하
+      ..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
