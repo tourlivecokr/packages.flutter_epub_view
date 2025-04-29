@@ -444,7 +444,7 @@ class _EpubViewState extends State<EpubView> {
                                             style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w700,
-                                              color: Color(0xffFF730D),
+                                              color: Color(0xff1A1A1A),
                                               height: 20.0 / 15.0
                                             ),
                                           ),
@@ -476,6 +476,7 @@ class _EpubViewState extends State<EpubView> {
                                                 ]
                                               ),
                                               child: Row(
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Container(
                                                     width: 24,
