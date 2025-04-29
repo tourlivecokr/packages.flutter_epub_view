@@ -392,7 +392,16 @@ class _EpubViewState extends State<EpubView> {
                     margin: const EdgeInsets.symmetric(vertical: 30),
                     child: Row(
                       children: [
-                        Image.network('', width: 32, height: 32,),
+                        Image.network('', width: 32, height: 32, errorBuilder: (context,_,__) {
+                          return Container(
+                            width: 32,
+                            height: 32,
+                            decoration: const BoxDecoration(
+                              color: Colors.grey,
+                              shape: BoxShape.circle
+                            ),
+                          )
+                        }),
                         const SizedBox(width: 5,),
                         Expanded(
                           child: Column(
@@ -589,7 +598,7 @@ class TrianglePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.blue
+      ..color = const Color(0xffF9F9F9)
       ..style = PaintingStyle.fill;
 
     final path = Path()
