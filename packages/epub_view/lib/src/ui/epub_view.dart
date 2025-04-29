@@ -400,7 +400,7 @@ class _EpubViewState extends State<EpubView> {
                               color: Colors.grey,
                               shape: BoxShape.circle
                             ),
-                          )
+                          );
                         }),
                         const SizedBox(width: 5,),
                         Expanded(
