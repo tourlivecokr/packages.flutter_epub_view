@@ -22,17 +22,20 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
         child: Stack(
           children: [
             Container(
+              color: Colors.black,
+            ),
+            Container(
               child: Column(
                 children: [
                   Container(
                     width: double.infinity,
                     height: 52,
                     margin: const EdgeInsets.symmetric(horizontal: 24),
-                    child: const Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(width: 20, height: 20,),
-                        Expanded(
+                        const SizedBox(width: 20, height: 20,),
+                        const Expanded(
                           child: Text(
                             'HeaderHeader',
                             style: TextStyle(
@@ -42,7 +45,17 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                               color: Colors.white,
                             ),
                           )
-                        )
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Icon(
+                            Icons.close,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -54,18 +67,15 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                           Positioned.fill(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.network(widget.imageUrl ?? '', errorBuilder: (context,_,__) {
+                              child: Image.network(widget.imageUrl ?? '', fit: BoxFit.fitHeight, errorBuilder: (context,_,__) {
                                 return Container(
                                   color: Colors.grey,
                                 );
                               }),
                             )
                           ),
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
+                          Align(
+                            alignment: Alignment.center,
                             child: InkWell(
                               onTap: () {
 
@@ -73,7 +83,10 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                               child: Container(
                                 width: 60,
                                 height: 60,
-                                color: Colors.black.withOpacity(0.6),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black.withOpacity(0.6),
+                                ),
                                 child: const Center(
                                   child: Icon(
                                     Icons.play_arrow,
