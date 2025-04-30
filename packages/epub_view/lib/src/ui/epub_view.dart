@@ -10,6 +10,7 @@ import 'package:epub_view/src/data/models/chapter.dart';
 import 'package:epub_view/src/data/models/chapter_view_value.dart';
 import 'package:epub_view/src/data/models/paragraph.dart';
 import 'package:epub_view/src/data/models/recommend.dart';
+import 'package:epub_view/src/ui/recommend_content_viewer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -460,7 +461,16 @@ class _EpubViewState extends State<EpubView> {
                                           const SizedBox(height: 15,),
                                           InkWell(
                                             onTap: () {
-
+                                              final trackImage = spanContext.attributes['data-trackimage'] ?? '';
+                                              final trackMp3 = spanContext.attributes['data-trackmp3'] ?? '';
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) => RecommendContentViewerPage(
+                                                    imageUrl: trackImage,
+                                                    mp3Url: trackMp3,
+                                                  )
+                                                )
+                                              );
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
