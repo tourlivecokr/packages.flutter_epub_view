@@ -44,6 +44,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
                             ),
+                            textAlign: TextAlign.center,
                           )
                         ),
                         InkWell(
@@ -105,6 +106,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                     width: double.infinity,
                     margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                     padding: const EdgeInsets.all(20),
+                    color: Colors.white,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
