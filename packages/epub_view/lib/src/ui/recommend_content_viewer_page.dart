@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_soloud/flutter_soloud.dart';
 
 class RecommendContentViewerPage extends StatefulWidget {
   const RecommendContentViewerPage({
     super.key,
+    required this.type,
     this.imageUrl,
     this.mp3Url,
   });
 
+  final String type;
   final String? imageUrl;
   final String? mp3Url;
 
@@ -15,6 +18,38 @@ class RecommendContentViewerPage extends StatefulWidget {
 }
 
 class _RecommendContentViewerPageState extends State<RecommendContentViewerPage> {
+  SoLoud? soLoud;
+  AudioSource? audioSource;
+  SoundHandle? soundHandle;
+
+  @override
+  void initState() {
+    if (widget.type == 'audio') {
+      soLoud = SoLoud.instance;
+    }
+  }
+
+  @override
+  void dispose() {
+    disposeAudio();
+  }
+
+  Future<void> disposeAudio() async {
+    if (soundHandle != null) {
+      await soLoud?.stop(soundHandle!);
+      soundHandle = null;
+    }
+    if (audioSource != null) {
+      await soLoud?.disposeSource(audioSource!);
+    }
+  }
+
+  Future<void> initAudio() async {
+    soLoud = SoLoud.instance;
+    await soLoud?.init();
+    audioSource = await soLoud?.loadAsset(widget.mp3Url ?? '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -78,8 +113,15 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                           Align(
                             alignment: Alignment.center,
                             child: InkWell(
-                              onTap: () {
-
+                              onTap: () async {
+                                if (soundHandle != null) {
+                                  await soLoud?.stop(soundHandle!);
+                                  soundHandle = null;
+                                  return;
+                                }
+                                if (audioSource != null) {
+                                  soundHandle = await soLoud?.play(audioSource!);
+                                }
                               },
                               child: Container(
                                 width: 60,
