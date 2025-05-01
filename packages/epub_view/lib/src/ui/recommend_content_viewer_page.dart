@@ -47,7 +47,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   Future<void> initAudio() async {
     soLoud = SoLoud.instance;
     await soLoud?.init();
-    audioSource = await soLoud?.loadAsset(widget.mp3Url ?? '');
+    audioSource = await soLoud?.loadUrl(widget.mp3Url ?? '');
   }
 
   @override
