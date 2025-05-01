@@ -25,7 +25,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   @override
   void initState() {
     if (widget.type == 'audio') {
-      soLoud = SoLoud.instance;
+      initAudio();
     }
   }
 
@@ -148,7 +148,10 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                     width: double.infinity,
                     margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                     padding: const EdgeInsets.all(20),
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
