@@ -73,7 +73,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController!,
       autoPlay: true,
-      aspectRatio: 210.0 / 375.0
+      aspectRatio: 375.0 / 210.0
     );
     setState(() {});
   }
