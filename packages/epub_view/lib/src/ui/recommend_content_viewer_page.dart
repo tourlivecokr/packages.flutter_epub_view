@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 
 class RecommendContentViewerPage extends StatefulWidget {
   const RecommendContentViewerPage({
@@ -23,6 +25,9 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   SoLoud? soLoud;
   AudioSource? audioSource;
   SoundHandle? soundHandle;
+
+  VideoPlayerController? videoPlayerController;
+  ChewieController? chewieController;
 
   @override
   void initState() {
@@ -52,6 +57,22 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
     audioSource = await soLoud?.loadUrl(widget.mp3Url ?? '');
   }
 
+  Future<void> initVideo() async {
+    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.mp3Url ?? ''));
+
+    if (videoPlayerController == null) {
+      return;
+    }
+
+    await videoPlayerController!.initialize();
+
+    chewieController = ChewieController(
+      videoPlayerController: videoPlayerController!,
+      autoPlay: true,
+      aspectRatio: 210.0 / 375.0
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,7 +82,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
             Positioned.fill(
               child: Container(
                 child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                  imageFilter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
                   child: Image.network(widget.imageUrl ?? '', fit: BoxFit.fitHeight, errorBuilder: (context,_,__) {
                     return Container(
                       color: Colors.black,
@@ -106,56 +127,66 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(60),
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(widget.imageUrl ?? '', fit: BoxFit.fitHeight, errorBuilder: (context,_,__) {
-                                return Container(
-                                  color: Colors.grey,
-                                );
-                              }),
-                            )
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: InkWell(
-                              onTap: () async {
-                                if (soundHandle != null) {
-                                  await soLoud?.stop(soundHandle!);
-                                  soundHandle = null;
-                                  return;
-                                }
-                                if (audioSource != null) {
-                                  soundHandle = await soLoud?.play(audioSource!);
-                                }
-                                setState(() {});
-                              },
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black.withOpacity(0.6),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    soundHandle == null ? Icons.play_arrow : Icons.stop,
-                                    size: 36,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ),
-                            ),
-                          )
-                        ],
+                  if (widget.type == 'video')
+                    Expanded(
+                      child: Center(
+                        child: Chewie(
+                          controller: chewieController!,
+                        ),
                       ),
                     )
-                  ),
+                  else
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.all(60),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(widget.imageUrl ?? '', fit: BoxFit.fitHeight, errorBuilder: (context,_,__) {
+                                  return Container(
+                                    color: Colors.grey,
+                                  );
+                                }),
+                              )
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: InkWell(
+                                onTap: () async {
+                                  if (soundHandle != null) {
+                                    await soLoud?.stop(soundHandle!);
+                                    soundHandle = null;
+                                    setState(() {});
+                                    return;
+                                  }
+                                  if (audioSource != null) {
+                                    soundHandle = await soLoud?.play(audioSource!);
+                                  }
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black.withOpacity(0.6),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      soundHandle == null ? Icons.play_arrow : Icons.stop,
+                                      size: 36,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ),
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
