@@ -28,6 +28,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
 
   VideoPlayerController? videoPlayerController;
   ChewieController? chewieController;
+  bool isVideoInitialized = false;
 
   @override
   void initState() {
@@ -80,7 +81,9 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   void chewiePrepare() {
     Future.delayed((Duration(seconds: 1)), () {
       if (chewieController != null && chewieController!.videoPlayerController.value.isInitialized) {
-        setState(() {});
+        setState(() {
+          isVideoInitialized = true;
+        });
       } else {
         chewiePrepare();
       }
@@ -144,7 +147,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                   if (widget.type == 'video')
                     Expanded(
                       child: Center(
-                        child: chewieController != null && chewieController!.videoPlayerController.value.isInitialized ? Chewie(
+                        child: isVideoInitialized ? Chewie(
                           controller: chewieController!,
                         ) : const Center(
                           child: CircularProgressIndicator(
