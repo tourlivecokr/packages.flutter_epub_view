@@ -73,7 +73,18 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
       autoPlay: true,
       aspectRatio: 210.0 / 375.0
     );
-    setState(() {});
+
+    chewiePrepare();
+  }
+
+  void chewiePrepare() {
+    Future.delayed((Duration(seconds: 1)), () {
+      if (chewieController != null && chewieController!.videoPlayerController.value.isInitialized) {
+        setState(() {});
+      } else {
+        chewiePrepare();
+      }
+    });
   }
 
   @override
