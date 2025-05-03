@@ -71,6 +71,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
       autoPlay: true,
       aspectRatio: 210.0 / 375.0
     );
+    setState(() {});
   }
 
   @override
@@ -130,7 +131,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                   if (widget.type == 'video')
                     Expanded(
                       child: Center(
-                        child: Chewie(
+                        child: chewieController == null ? Container() : Chewie(
                           controller: chewieController!,
                         ),
                       ),

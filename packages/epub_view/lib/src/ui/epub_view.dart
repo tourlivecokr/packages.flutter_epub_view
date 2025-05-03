@@ -482,24 +482,24 @@ class _EpubViewState extends State<EpubView> {
                                   if (type == 'audio') {
                                     final trackMp3 = spanContext.attributes['data-trackmp3'] ?? '';
                                     Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => RecommendContentViewerPage(
-                                              type: type,
-                                              imageUrl: trackImage,
-                                              mp3Url: trackMp3,
-                                            )
+                                      MaterialPageRoute(
+                                        builder: (context) => RecommendContentViewerPage(
+                                          type: type,
+                                          imageUrl: trackImage,
+                                          mp3Url: trackMp3,
                                         )
+                                      )
                                     );
                                   } else {
                                     final trackMp4 = spanContext.attributes['data-trackmp4'] ?? '';
                                     Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => RecommendContentViewerPage(
-                                              type: type,
-                                              imageUrl: trackImage,
-                                              mp3Url: trackMp4,
-                                            )
+                                      MaterialPageRoute(
+                                        builder: (context) => RecommendContentViewerPage(
+                                          type: type,
+                                          imageUrl: trackImage,
+                                          mp3Url: trackMp4,
                                         )
+                                      )
                                     );
                                   }
                                 },
