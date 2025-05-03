@@ -479,16 +479,29 @@ class _EpubViewState extends State<EpubView> {
                               InkWell(
                                 onTap: () {
                                   final trackImage = spanContext.attributes['data-trackimage'] ?? '';
-                                  final trackMp3 = spanContext.attributes['data-trackmp3'] ?? '';
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => RecommendContentViewerPage(
-                                        type: type,
-                                        imageUrl: trackImage,
-                                        mp3Url: trackMp3,
-                                      )
-                                    )
-                                  );
+                                  if (type == 'audio') {
+                                    final trackMp3 = spanContext.attributes['data-trackmp3'] ?? '';
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => RecommendContentViewerPage(
+                                              type: type,
+                                              imageUrl: trackImage,
+                                              mp3Url: trackMp3,
+                                            )
+                                        )
+                                    );
+                                  } else {
+                                    final trackMp4 = spanContext.attributes['data-trackmp4'] ?? '';
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => RecommendContentViewerPage(
+                                              type: type,
+                                              imageUrl: trackImage,
+                                              mp3Url: trackMp4,
+                                            )
+                                        )
+                                    );
+                                  }
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
