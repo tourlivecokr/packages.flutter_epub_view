@@ -58,14 +58,16 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
       child: Material(
         child: Stack(
           children: [
-            Container(
-              child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 13, sigmaY: 13),
-                child: Image.network(widget.imageUrl ?? '', fit: BoxFit.fitHeight, errorBuilder: (context,_,__) {
-                  return Container(
-                    color: Colors.black,
-                  );
-                }),
+            Positioned.fill(
+              child: Container(
+                child: ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                  child: Image.network(widget.imageUrl ?? '', fit: BoxFit.fitHeight, errorBuilder: (context,_,__) {
+                    return Container(
+                      color: Colors.black,
+                    );
+                  }),
+                ),
               ),
             ),
             Container(
@@ -131,6 +133,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                                 if (audioSource != null) {
                                   soundHandle = await soLoud?.play(audioSource!);
                                 }
+                                setState(() {});
                               },
                               child: Container(
                                 width: 60,
