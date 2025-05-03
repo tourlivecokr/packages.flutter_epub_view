@@ -42,6 +42,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   @override
   void dispose() {
     disposeAudio();
+    disposeVideo();
     super.dispose();
   }
 
@@ -53,6 +54,11 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
     if (audioSource != null) {
       await soLoud?.disposeSource(audioSource!);
     }
+  }
+
+  Future<void> disposeVideo() async {
+    await videoPlayerController?.dispose();
+    chewieController?.dispose();
   }
 
   Future<void> initAudio() async {
@@ -134,12 +140,15 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                   ),
                   if (widget.type == 'video')
                     Expanded(
-                      child: Center(
-                        child: chewieController != null && chewieController!.videoPlayerController.value.isInitialized ? Chewie(
-                          controller: chewieController!,
-                        ) : const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
+                      child: AspectRatio(
+                        aspectRatio: 375.0 / 210.0,
+                        child: Center(
+                          child: chewieController != null && chewieController!.videoPlayerController.value.isInitialized ? Chewie(
+                            controller: chewieController!,
+                          ) : const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
