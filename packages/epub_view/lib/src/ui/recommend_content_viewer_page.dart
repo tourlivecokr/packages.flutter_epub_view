@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
@@ -57,7 +59,14 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
         child: Stack(
           children: [
             Container(
-              color: Colors.black,
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 13, sigmaY: 13),
+                child: Image.network(widget.imageUrl ?? '', fit: BoxFit.fitHeight, errorBuilder: (context,_,__) {
+                  return Container(
+                    color: Colors.black,
+                  );
+                }),
+              ),
             ),
             Container(
               child: Column(
@@ -130,9 +139,9 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                                   shape: BoxShape.circle,
                                   color: Colors.black.withOpacity(0.6),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Icon(
-                                    Icons.play_arrow,
+                                    soundHandle == null ? Icons.play_arrow : Icons.stop,
                                     size: 36,
                                     color: Colors.white,
                                   ),
