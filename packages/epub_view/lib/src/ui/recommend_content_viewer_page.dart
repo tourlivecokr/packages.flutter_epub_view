@@ -1,21 +1,29 @@
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:chewie/chewie.dart';
+import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 
 class RecommendContentViewerPage extends StatefulWidget {
   const RecommendContentViewerPage({
     super.key,
+    required this.baseUrl,
     required this.type,
+    required this.tourId,
     this.imageUrl,
     this.mp3Url,
+    this.onTourIdSelected,
   });
 
+  final String baseUrl;
   final String type;
+  final String tourId;
   final String? imageUrl;
   final String? mp3Url;
+  final void Function(int tourId)? onTourIdSelected;
 
   @override
   State<RecommendContentViewerPage> createState() => _RecommendContentViewerPageState();
@@ -28,6 +36,11 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
 
   VideoPlayerController? videoPlayerController;
   ChewieController? chewieController;
+
+  String tourName = '';
+  int tourPrice = 0;
+
+  bool isTourLoaded = false;
 
   @override
   void initState() {
@@ -82,6 +95,35 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
       aspectRatio: 375.0 / 210.0
     );
     setState(() {});
+  }
+
+  Future<void> fetchTourData(int tourId) async {
+    final dio = Dio();
+
+    try {
+      final response = await dio.get(
+        '${widget.baseUrl}/v1/tours/${tourId}',
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        setState(() {
+          tourName = data['name'] ?? '이름';
+          tourPrice = data['price'] ?? 10000;
+        });
+        isTourLoaded = true;
+
+      } else {
+        print('⚠️ 서버 응답 오류: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -140,17 +182,21 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                   ),
                   if (widget.type == 'video')
                     Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 375.0 / 210.0,
-                        child: Center(
-                          child: chewieController != null && chewieController!.videoPlayerController.value.isInitialized ? Chewie(
-                            controller: chewieController!,
-                          ) : const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: AspectRatio(
+                              aspectRatio: 375.0 / 210.0,
+                              child: chewieController != null && chewieController!.videoPlayerController.value.isInitialized ? Chewie(
+                                controller: chewieController!,
+                              ) : const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     )
                   else
@@ -205,85 +251,88 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                         ),
                       )
                     ),
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'TitleTitleTitleTitleTitleTitle',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      height: 22.0 / 16.0,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
+                  Opacity(
+                    opacity: isTourLoaded ? 1 : 0,
+                    child: Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      tourName,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        height: 22.0 / 16.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    '50,000원',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      height: 26.0 / 18.0,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                ],
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      '${NumberFormat('#,###').format(tourPrice)}원',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        height: 26.0 / 18.0,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black,
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ),
+                              const SizedBox(width: 10),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network('', width: 70, height: 70, errorBuilder: (context,_,__) {
+                                  return Container(
+                                    width: 70,
+                                    height: 70,
+                                    color: Colors.grey,
+                                  );
+                                }),
                               )
-                            ),
-                            const SizedBox(width: 10),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network('', width: 70, height: 70, errorBuilder: (context,_,__) {
-                                return Container(
-                                  width: 70,
-                                  height: 70,
-                                  color: Colors.grey,
-                                );
-                              }),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 15,),
-                        InkWell(
-                          onTap: () {
-
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffFF730D),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                '셀프투어가 궁금하다면 클릭 👉',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  height: 22.0 / 16.0,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                            ],
+                          ),
+                          const SizedBox(height: 15,),
+                          InkWell(
+                            onTap: () {
+                              widget.onTourIdSelected?.call(int.parse(widget.tourId));
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: const Color(0xffFF730D),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  '셀프투어가 궁금하다면 클릭 👉',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    height: 22.0 / 16.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -295,3 +344,5 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
     );
   }
 }
+
+

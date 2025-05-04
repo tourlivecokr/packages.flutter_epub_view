@@ -37,6 +37,8 @@ class EpubView extends StatefulWidget {
       options: DefaultBuilderOptions(),
     ),
     this.shrinkWrap = false,
+    this.baseUrl = 'https://api.tourlive.co.kr',
+    this.onTourIdSelected,
     Key? key,
   }) : super(key: key);
 
@@ -55,6 +57,9 @@ class EpubView extends StatefulWidget {
 
   /// Builders
   final EpubViewBuilders builders;
+
+  final String baseUrl;
+  final Function(int tourId)? onTourIdSelected;
 
   @override
   State<EpubView> createState() => _EpubViewState();
@@ -331,6 +336,8 @@ class _EpubViewState extends State<EpubView> {
     int chapterIndex,
     int paragraphIndex,
     ExternalLinkPressed onExternalLinkPressed,
+    String baseUrl,
+    Function(int tourId)? onTourIdSelected,
   ) {
     if (paragraphs.isEmpty) {
       return Container();
@@ -386,13 +393,21 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"audio"},
                 builder: (spanContext) {
-                  return _buildRecommend(context, 'audio', spanContext);
+                  return _buildRecommend(context, 'audio', spanContext, baseUrl,
+                    onTourIdSelected: (tourId) {
+                      onTourIdSelected?.call(tourId);
+                    }
+                  );
                 }
               ),
               TagExtension(
                 tagsToExtend: {"video"},
                 builder: (spanContext) {
-                  return _buildRecommend(context, 'video', spanContext);
+                  return _buildRecommend(context, 'video', spanContext, baseUrl,
+                    onTourIdSelected: (tourId) {
+                      onTourIdSelected?.call(tourId);
+                    }
+                  );
                 }
               ),
             ],
@@ -402,7 +417,7 @@ class _EpubViewState extends State<EpubView> {
     );
   }
 
-  static Widget _buildRecommend(BuildContext context, String type, ExtensionContext spanContext) {
+  static Widget _buildRecommend(BuildContext context, String type, ExtensionContext spanContext, String baseUrl, {Function(int tourId)? onTourIdSelected}) {
     final trackTitle = spanContext.attributes['data-tracktitle'] ?? '';
     final trackContent = spanContext.attributes['data-content'] ?? '';
 
@@ -484,9 +499,14 @@ class _EpubViewState extends State<EpubView> {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => RecommendContentViewerPage(
+                                          baseUrl: baseUrl,
                                           type: type,
+                                          tourId: spanContext.attributes['data-tourid'] ?? '',
                                           imageUrl: trackImage,
                                           mp3Url: trackMp3,
+                                          onTourIdSelected: (tourId) {
+                                            onTourIdSelected?.call(tourId);
+                                          },
                                         )
                                       )
                                     );
@@ -495,9 +515,14 @@ class _EpubViewState extends State<EpubView> {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => RecommendContentViewerPage(
+                                          baseUrl: baseUrl,
                                           type: type,
+                                          tourId: spanContext.attributes['data-tourid'] ?? '',
                                           imageUrl: trackImage,
                                           mp3Url: trackMp4,
+                                          onTourIdSelected: (tourId) {
+                                            onTourIdSelected?.call(tourId);
+                                          },
                                         )
                                       )
                                     );
@@ -575,6 +600,8 @@ class _EpubViewState extends State<EpubView> {
           _getChapterIndexBy(positionIndex: index),
           _getParagraphIndexBy(positionIndex: index),
           _onLinkPressed,
+          widget.baseUrl,
+          widget.onTourIdSelected,
         );
       },
     );
