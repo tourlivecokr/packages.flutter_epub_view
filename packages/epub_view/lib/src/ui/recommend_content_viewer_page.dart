@@ -50,6 +50,8 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
     } else {
       initVideo();
     }
+
+    fetchTourData(int.parse(widget.tourId));
   }
 
   @override
