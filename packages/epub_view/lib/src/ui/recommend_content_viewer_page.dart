@@ -13,6 +13,7 @@ class RecommendContentViewerPage extends StatefulWidget {
     required this.baseUrl,
     required this.type,
     required this.tourId,
+    required this.tourTitle,
     this.imageUrl,
     this.mp3Url,
     this.onTourIdSelected,
@@ -21,6 +22,7 @@ class RecommendContentViewerPage extends StatefulWidget {
   final String baseUrl;
   final String type;
   final String tourId;
+  final String tourTitle;
   final String? imageUrl;
   final String? mp3Url;
   final void Function(int tourId)? onTourIdSelected;
@@ -39,6 +41,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
 
   String tourName = '';
   int tourPrice = 0;
+  String tourImage = '';
 
   bool isTourLoaded = false;
 
@@ -117,6 +120,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
         setState(() {
           tourName = data['data']['name'] ?? '이름';
           tourPrice = data['data']['price'] ?? 10000;
+          tourImage = data['tour_images'][0]['resized_image'] ?? '';
         });
         isTourLoaded = true;
 
@@ -298,7 +302,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                               const SizedBox(width: 10),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.network('', width: 70, height: 70, errorBuilder: (context,_,__) {
+                                child: Image.network(tourImage, width: 70, height: 70, errorBuilder: (context,_,__) {
                                   return Container(
                                     width: 70,
                                     height: 70,

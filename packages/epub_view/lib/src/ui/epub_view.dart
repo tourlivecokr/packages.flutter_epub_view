@@ -502,6 +502,7 @@ class _EpubViewState extends State<EpubView> {
                                           baseUrl: baseUrl,
                                           type: type,
                                           tourId: spanContext.attributes['data-tourid'] ?? '',
+                                          tourTitle: trackTitle,
                                           imageUrl: trackImage,
                                           mp3Url: trackMp3,
                                           onTourIdSelected: (tourId) {
@@ -518,6 +519,7 @@ class _EpubViewState extends State<EpubView> {
                                           baseUrl: baseUrl,
                                           type: type,
                                           tourId: spanContext.attributes['data-tourid'] ?? '',
+                                          tourTitle: trackTitle,
                                           imageUrl: trackImage,
                                           mp3Url: trackMp4,
                                           onTourIdSelected: (tourId) {
