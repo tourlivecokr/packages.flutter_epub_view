@@ -14,6 +14,7 @@ import 'package:epub_view/src/ui/recommend_content_viewer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:html/parser.dart' as html_parser;
 
 export 'package:epubx/epubx.dart' hide Image;
 
@@ -410,6 +411,53 @@ class _EpubViewState extends State<EpubView> {
                   );
                 }
               ),
+              TagExtension(
+                tagsToExtend: {"intro"},
+                builder: (spanContext) {
+                  return Column(
+                    children: [
+                      Text(spanContext.attributes['data-title'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff1A1A1A),
+                          height: 1.3
+                        ),
+                      ),
+                      const SizedBox(height: 15,),
+                      Text(spanContext.attributes['data-body'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff3A3A3A),
+                          height: 22.0 / 16.0
+                        ),
+                      ),
+                      const SizedBox(height: 46,),
+                      const Text('샘플',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff3A3A3A),
+                          height: 26.0 / 18.0
+                        ),
+                      ),
+                      const SizedBox(height: 10,),
+                      _buildRecommend(context, 'video', spanContext, baseUrl,
+                        onTourIdSelected: (tourId) {
+                          onTourIdSelected?.call(tourId);
+                        }
+                      ),
+                      const SizedBox(height: 12,),
+                      const Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Color(0xFFE1E1E1),
+                      )
+                    ],
+                  );
+                }
+              )
             ],
           ),
         ],
