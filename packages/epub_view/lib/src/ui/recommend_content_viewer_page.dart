@@ -115,8 +115,8 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
       if (response.statusCode == 200) {
         final data = response.data;
         setState(() {
-          tourName = data['name'] ?? '이름';
-          tourPrice = data['price'] ?? 10000;
+          tourName = data['data']['name'] ?? '이름';
+          tourPrice = data['data']['price'] ?? 10000;
         });
         isTourLoaded = true;
 
