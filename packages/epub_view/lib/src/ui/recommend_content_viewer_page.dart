@@ -302,7 +302,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                               const SizedBox(width: 10),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.network(tourImage, width: 70, height: 70, errorBuilder: (context,_,__) {
+                                child: Image.network(tourImage, width: 70, height: 70, fit: BoxFit.cover, errorBuilder: (context,_,__) {
                                   return Container(
                                     width: 70,
                                     height: 70,
@@ -314,7 +314,13 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                           ),
                           const SizedBox(height: 15,),
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
+                              if (soundHandle != null) {
+                                await soLoud?.stop(soundHandle!);
+                              soundHandle = null;
+                              }
+                              await chewieController?.pause();
+
                               widget.onTourIdSelected?.call(int.parse(widget.tourId));
                             },
                             child: Container(
