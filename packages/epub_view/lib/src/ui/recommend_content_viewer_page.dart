@@ -120,7 +120,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
         setState(() {
           tourName = data['data']['name'] ?? '이름';
           tourPrice = data['data']['price'] ?? 10000;
-          tourImage = data['tour_images'][0]['resized_image'] ?? '';
+          tourImage = data['data']['tour_images'][0]['resized_image'] ?? '';
         });
         isTourLoaded = true;
 
@@ -161,10 +161,10 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(width: 20, height: 20,),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'HeaderHeader',
-                            style: TextStyle(
+                            widget.tourTitle,
+                            style: const TextStyle(
                               fontSize: 17,
                               height: 25.0 / 17.0,
                               fontWeight: FontWeight.w700,
