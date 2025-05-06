@@ -414,9 +414,12 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"intro"},
                 builder: (spanContext) {
+                  final dataTitle = spanContext.attributes['data-title'].toString().replaceAll(r'\n', '\n') ?? '';
+                  final dataBody = spanContext.attributes['data-body'].toString().replaceAll(r'\n', '\n') ?? '';
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(spanContext.attributes['data-title'] ?? '',
+                      Text(dataTitle,
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
@@ -425,7 +428,7 @@ class _EpubViewState extends State<EpubView> {
                         ),
                       ),
                       const SizedBox(height: 15,),
-                      Text(spanContext.attributes['data-body'] ?? '',
+                      Text(dataBody,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
