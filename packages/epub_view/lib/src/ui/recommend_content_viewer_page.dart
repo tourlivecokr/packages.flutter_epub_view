@@ -15,7 +15,7 @@ class RecommendContentViewerPage extends StatefulWidget {
     required this.tourId,
     required this.tourTitle,
     this.imageUrl,
-    this.mp3Url,
+    this.fileUrl,
     this.onTourIdSelected,
   });
 
@@ -24,7 +24,7 @@ class RecommendContentViewerPage extends StatefulWidget {
   final String tourId;
   final String tourTitle;
   final String? imageUrl;
-  final String? mp3Url;
+  final String? fileUrl;
   final void Function(int tourId)? onTourIdSelected;
 
   @override
@@ -82,11 +82,11 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   Future<void> initAudio() async {
     soLoud = SoLoud.instance;
     await soLoud?.init();
-    audioSource = await soLoud?.loadUrl(widget.mp3Url ?? '');
+    audioSource = await soLoud?.loadUrl(widget.fileUrl ?? '');
   }
 
   Future<void> initVideo() async {
-    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.mp3Url ?? ''));
+    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.fileUrl ?? ''));
 
     if (videoPlayerController == null) {
       return;

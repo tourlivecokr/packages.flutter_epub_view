@@ -57,7 +57,7 @@ ParseParagraphsResult parseParagraphs(
 
         paragraphs.addAll(
           elmList.map((element) {
-            if (element.localName == 'recommend') {
+            if (element.localName == 'player') {
               recommends.add(Recommend(element, paragraphs.length));
             }
             return Paragraph(element, chapterIndexes.length);

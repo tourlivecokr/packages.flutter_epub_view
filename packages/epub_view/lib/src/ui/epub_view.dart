@@ -12,6 +12,7 @@ import 'package:epub_view/src/data/models/paragraph.dart';
 import 'package:epub_view/src/data/models/recommend.dart';
 import 'package:epub_view/src/ui/recommend_content_viewer_page.dart';
 import 'package:epub_view/src/ui/recommend_item.dart';
+import 'package:epub_view/src/ui/table_of_recommends.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -395,7 +396,7 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"audio"},
                 builder: (spanContext) {
-                  return RecommendItem(type: 'audio', attributes: spanContext.attributes, baseUrl: baseUrl,
+                  return RecommendItem(attributes: spanContext.attributes, baseUrl: baseUrl,
                     onTourIdSelected: (tourId) {
                       onTourIdSelected?.call(tourId);
                     }
@@ -405,7 +406,7 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"video"},
                 builder: (spanContext) {
-                  return RecommendItem(type: 'video', attributes: spanContext.attributes, baseUrl: baseUrl,
+                  return RecommendItem(attributes: spanContext.attributes, baseUrl: baseUrl,
                     onTourIdSelected: (tourId) {
                       onTourIdSelected?.call(tourId);
                     }
@@ -447,7 +448,7 @@ class _EpubViewState extends State<EpubView> {
                         ),
                       ),
                       const SizedBox(height: 10,),
-                      RecommendItem(type: 'audio', attributes: spanContext.attributes, baseUrl: baseUrl,
+                      RecommendItem(attributes: spanContext.attributes, baseUrl: baseUrl,
                         onTourIdSelected: (tourId) {
                           onTourIdSelected?.call(tourId);
                         }
@@ -470,27 +471,73 @@ class _EpubViewState extends State<EpubView> {
   }
 
   Widget _buildLoaded(BuildContext context) {
-    return ScrollablePositionedList.builder(
-      shrinkWrap: widget.shrinkWrap,
-      initialScrollIndex: _epubCfiReader!.paragraphIndexByCfiFragment ?? 0,
-      itemCount: _controller.isEpubDemo ? (_chapterIndexes.length > 3 ? _chapterIndexes[3] : _chapterIndexes.length) : _paragraphs.length,
-      itemScrollController: _itemScrollController,
-      itemPositionsListener: _itemPositionListener,
-      itemBuilder: (BuildContext context, int index) {
-        return widget.builders.chapterBuilder(
-          context,
-          widget.builders,
-          widget.controller._document!,
-          _chapters,
-          _paragraphs,
-          index,
-          _getChapterIndexBy(positionIndex: index),
-          _getParagraphIndexBy(positionIndex: index),
-          _onLinkPressed,
-          widget.baseUrl,
-          widget.onTourIdSelected,
-        );
-      },
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: ScrollablePositionedList.builder(
+            shrinkWrap: widget.shrinkWrap,
+            initialScrollIndex: _epubCfiReader!.paragraphIndexByCfiFragment ?? 0,
+            itemCount: _controller.isEpubDemo ? (_chapterIndexes.length > 3 ? _chapterIndexes[3] : _chapterIndexes.length) : _paragraphs.length,
+            itemScrollController: _itemScrollController,
+            itemPositionsListener: _itemPositionListener,
+            itemBuilder: (BuildContext context, int index) {
+              return widget.builders.chapterBuilder(
+                context,
+                widget.builders,
+                widget.controller._document!,
+                _chapters,
+                _paragraphs,
+                index,
+                _getChapterIndexBy(positionIndex: index),
+                _getParagraphIndexBy(positionIndex: index),
+                _onLinkPressed,
+                widget.baseUrl,
+                widget.onTourIdSelected,
+              );
+            },
+          ),
+        ),
+        if (_recommends.isNotEmpty)
+          Positioned(
+            right: 20,
+            bottom: 25,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EpubViewTableOfRecommends(controller: _controller, baseUrl: widget.baseUrl,
+                      onTourIdSelected: (tourId) {
+                        widget.onTourIdSelected?.call(tourId);
+                      }
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF730D),
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/list_play.png', width: 16, height: 16),
+                    const SizedBox(width: 4,),
+                    const Text('가이드꿀팁',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        height: 18.0 / 14.0
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          )
+      ],
     );
   }
 

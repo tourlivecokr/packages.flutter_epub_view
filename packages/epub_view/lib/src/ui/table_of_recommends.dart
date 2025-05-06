@@ -83,7 +83,6 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfRecommends> {
                     Navigator.of(context).pop();
                   },
                   child: RecommendItem(
-                    type: recommends[index].element.attributes['data-type'] ?? 'audio',
                     baseUrl: widget.baseUrl,
                     attributes: recommends[index].element.attributes as LinkedHashMap<String, String>,
                     onTourIdSelected: widget.onTourIdSelected,

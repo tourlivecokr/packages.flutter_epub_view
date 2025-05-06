@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 class RecommendItem extends StatelessWidget {
   const RecommendItem({
     super.key,
-    required this.type,
     required this.baseUrl,
     this.onTourIdSelected,
     required this.attributes,
   });
 
-  final String type;
   final String baseUrl;
   final Function(int tourId)? onTourIdSelected;
   final LinkedHashMap<String, String> attributes;
@@ -95,41 +93,23 @@ class RecommendItem extends StatelessWidget {
                               InkWell(
                                 onTap: () {
                                   final trackImage = attributes['data-trackimage'] ?? '';
-                                  if (type == 'audio') {
-                                    final trackMp3 = attributes['data-trackmp3'] ?? '';
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => RecommendContentViewerPage(
-                                              baseUrl: baseUrl,
-                                              type: type,
-                                              tourId: attributes['data-tourid'] ?? '',
-                                              tourTitle: trackTitle,
-                                              imageUrl: trackImage,
-                                              mp3Url: trackMp3,
-                                              onTourIdSelected: (tourId) {
-                                                onTourIdSelected?.call(tourId);
-                                              },
-                                            )
-                                        )
-                                    );
-                                  } else {
-                                    final trackMp4 = attributes['data-trackmp4'] ?? '';
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => RecommendContentViewerPage(
-                                              baseUrl: baseUrl,
-                                              type: type,
-                                              tourId: attributes['data-tourid'] ?? '',
-                                              tourTitle: trackTitle,
-                                              imageUrl: trackImage,
-                                              mp3Url: trackMp4,
-                                              onTourIdSelected: (tourId) {
-                                                onTourIdSelected?.call(tourId);
-                                              },
-                                            )
-                                        )
-                                    );
-                                  }
+                                  final type = attributes['data-type'] ?? 'audio';
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => RecommendContentViewerPage(
+                                        baseUrl: baseUrl,
+                                        type: type,
+                                        tourId: attributes['data-tourid'] ?? '',
+                                        tourTitle: trackTitle,
+                                        imageUrl: trackImage,
+                                        fileUrl: attributes['data-trackfile'] ?? '',
+                                        onTourIdSelected: (tourId) {
+                                          onTourIdSelected?.call(tourId);
+                                        },
+                                      )
+                                    )
+                                  );
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
