@@ -73,7 +73,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfRecommends> {
                 )
               : ListView.builder(
             controller: _scrollController,
-            padding: widget.padding,
+            padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             itemBuilder: (context, index) {
               return Container(
                 margin: const EdgeInsets.only(bottom: 15),

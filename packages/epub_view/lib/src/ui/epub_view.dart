@@ -519,12 +519,13 @@ class _EpubViewState extends State<EpubView> {
                   color: const Color(0xFFFF730D),
                   borderRadius: BorderRadius.circular(99),
                 ),
-                child: Row(
+                child: const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset('assets/images/list_play.png', width: 16, height: 16),
-                    const SizedBox(width: 4,),
-                    const Text('가이드꿀팁',
+                    Icon(Icons.playlist_play, color: Colors.white, size: 24,),
+                    //Image.asset('assets/images/list_play.png', width: 16, height: 16),
+                    SizedBox(width: 4,),
+                    Text('가이드꿀팁',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
