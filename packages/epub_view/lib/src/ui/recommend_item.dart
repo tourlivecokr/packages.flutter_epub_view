@@ -13,7 +13,7 @@ class RecommendItem extends StatelessWidget {
 
   final String baseUrl;
   final Function(int tourId)? onTourIdSelected;
-  final LinkedHashMap<String, String> attributes;
+  final Map<String, String> attributes;
 
   @override
   Widget build(BuildContext context) {

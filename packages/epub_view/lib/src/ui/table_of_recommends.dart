@@ -84,7 +84,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfRecommends> {
                   },
                   child: RecommendItem(
                     baseUrl: widget.baseUrl,
-                    attributes: recommends[index].element.attributes as LinkedHashMap<String, String>,
+                    attributes: Map<String, String>.from(recommends[index].element.attributes),
                     onTourIdSelected: widget.onTourIdSelected,
                   )
                 ),
