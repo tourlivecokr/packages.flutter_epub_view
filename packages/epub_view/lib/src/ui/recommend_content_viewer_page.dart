@@ -179,7 +179,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                           },
                           child: const Icon(
                             Icons.close,
-                            size: 20,
+                            size: 24,
                             color: Colors.white,
                           ),
                         ),
@@ -270,49 +270,52 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      tourName,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        height: 22.0 / 16.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.fromLTRB(7, 5, 7, 15),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        tourName,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          height: 22.0 / 16.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      '${NumberFormat('#,###').format(tourPrice)}원',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        height: 26.0 / 18.0,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black,
-                                      ),
-                                    )
-                                  ],
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        '${NumberFormat('#,###').format(tourPrice)}원',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          height: 26.0 / 18.0,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ),
+                                const SizedBox(width: 10),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(tourImage, width: 70, height: 70, fit: BoxFit.cover, errorBuilder: (context,_,__) {
+                                    return Container(
+                                      width: 70,
+                                      height: 70,
+                                      color: Colors.grey,
+                                    );
+                                  }),
                                 )
-                              ),
-                              const SizedBox(width: 10),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(tourImage, width: 70, height: 70, fit: BoxFit.cover, errorBuilder: (context,_,__) {
-                                  return Container(
-                                    width: 70,
-                                    height: 70,
-                                    color: Colors.grey,
-                                  );
-                                }),
-                              )
-                            ],
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 15,),
                           InkWell(
                             onTap: () async {
                               if (soundHandle != null) {

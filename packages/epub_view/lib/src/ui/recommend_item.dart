@@ -25,16 +25,19 @@ class RecommendItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(attributes['data-creatorimage'] ?? '', width: 32, height: 32, errorBuilder: (context,_,__) {
-            return Container(
-              width: 32,
-              height: 32,
-              decoration: const BoxDecoration(
-                  color: Colors.grey,
-                  shape: BoxShape.circle
-              ),
-            );
-          }),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.network(attributes['data-creatorimage'] ?? '', width: 32, height: 32, errorBuilder: (context,_,__) {
+              return Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                    color: Colors.grey,
+                    shape: BoxShape.circle
+                ),
+              );
+            }),
+          ),
           const SizedBox(width: 5,),
           Expanded(
               child: Column(
@@ -135,7 +138,7 @@ class RecommendItem extends StatelessWidget {
                                             color: Color(0xffFF730D)
                                         ),
                                         child: const Center(
-                                          child: Icon(Icons.play_arrow, color: Colors.white, size: 14),
+                                          child: Icon(Icons.play_arrow, color: Colors.white, size: 16),
                                         ),
                                       ),
                                       const SizedBox(width: 10,),
