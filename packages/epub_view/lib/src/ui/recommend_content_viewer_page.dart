@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
+import 'package:epub_view/src/util/mixpanel_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:chewie/chewie.dart';
@@ -12,8 +13,10 @@ class RecommendContentViewerPage extends StatefulWidget {
     super.key,
     required this.baseUrl,
     required this.type,
-    required this.tourId,
-    required this.tourTitle,
+    required this.epubTourId,
+    required this.trackTourId,
+    required this.trackId,
+    required this.trackTitle,
     this.imageUrl,
     this.fileUrl,
     this.onTourIdSelected,
@@ -21,8 +24,10 @@ class RecommendContentViewerPage extends StatefulWidget {
 
   final String baseUrl;
   final String type;
-  final String tourId;
-  final String tourTitle;
+  final String epubTourId;
+  final String trackTourId;
+  final String trackId;
+  final String trackTitle;
   final String? imageUrl;
   final String? fileUrl;
   final void Function(int tourId)? onTourIdSelected;
@@ -48,13 +53,24 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   @override
   void initState() {
     super.initState();
+
+    MixpanelManager.init();
+    MixpanelManager.instance?.track(
+        'PageView_PlayerFromEbook',
+        properties: {
+          'tour_id': widget.epubTourId,
+          'track_title': widget.trackTitle,
+          'track_id': widget.trackId,
+        }
+    );
+
     if (widget.type == 'audio') {
       initAudio();
     } else {
       initVideo();
     }
 
-    fetchTourData(int.parse(widget.tourId));
+    fetchTourData(int.parse(widget.trackTourId));
   }
 
   @override
@@ -163,7 +179,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                         const SizedBox(width: 20, height: 20,),
                         Expanded(
                           child: Text(
-                            widget.tourTitle,
+                            widget.trackTitle,
                             style: const TextStyle(
                               fontSize: 17,
                               height: 25.0 / 17.0,
@@ -318,13 +334,24 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                           ),
                           InkWell(
                             onTap: () async {
+                              MixpanelManager.init();
+                              MixpanelManager.instance?.track(
+                                  'EventOn_ClickTourFromEbook',
+                                  properties: {
+                                    'tour_id': widget.epubTourId,
+                                    'track_title': widget.trackTitle,
+                                    'track_id': widget.trackId,
+                                    'clicktour_id': widget.trackTourId,
+                                  }
+                              );
+
                               if (soundHandle != null) {
                                 await soLoud?.stop(soundHandle!);
                               soundHandle = null;
                               }
                               await chewieController?.pause();
 
-                              widget.onTourIdSelected?.call(int.parse(widget.tourId));
+                              widget.onTourIdSelected?.call(int.parse(widget.trackTourId));
                             },
                             child: Container(
                               width: double.infinity,

@@ -27,6 +27,7 @@ typedef ChaptersBuilder = Widget Function(
   int chapterIndex,
   int paragraphIndex,
   ExternalLinkPressed onExternalLinkPressed,
+  int tourId,
   String baseUrl,
   Function(int tourId)? onTourIdSelected,
 );

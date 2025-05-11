@@ -40,6 +40,7 @@ class EpubView extends StatefulWidget {
       options: DefaultBuilderOptions(),
     ),
     this.shrinkWrap = false,
+    this.tourId = 0,
     this.baseUrl = 'https://api.tourlive.co.kr',
     this.onTourIdSelected,
     Key? key,
@@ -61,6 +62,7 @@ class EpubView extends StatefulWidget {
   /// Builders
   final EpubViewBuilders builders;
 
+  final int tourId;
   final String baseUrl;
   final Function(int tourId)? onTourIdSelected;
 
@@ -339,6 +341,7 @@ class _EpubViewState extends State<EpubView> {
     int chapterIndex,
     int paragraphIndex,
     ExternalLinkPressed onExternalLinkPressed,
+    int tourId,
     String baseUrl,
     Function(int tourId)? onTourIdSelected,
   ) {
@@ -396,7 +399,7 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"audio"},
                 builder: (spanContext) {
-                  return RecommendItem(attributes: spanContext.attributes, baseUrl: baseUrl,
+                  return RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
                     onTourIdSelected: (tourId) {
                       onTourIdSelected?.call(tourId);
                     }
@@ -406,7 +409,7 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"video"},
                 builder: (spanContext) {
-                  return RecommendItem(attributes: spanContext.attributes, baseUrl: baseUrl,
+                  return RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
                     onTourIdSelected: (tourId) {
                       onTourIdSelected?.call(tourId);
                     }
@@ -448,7 +451,7 @@ class _EpubViewState extends State<EpubView> {
                         ),
                       ),
                       const SizedBox(height: 10,),
-                      RecommendItem(attributes: spanContext.attributes, baseUrl: baseUrl,
+                      RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
                         onTourIdSelected: (tourId) {
                           onTourIdSelected?.call(tourId);
                         }
@@ -491,6 +494,7 @@ class _EpubViewState extends State<EpubView> {
                 _getChapterIndexBy(positionIndex: index),
                 _getParagraphIndexBy(positionIndex: index),
                 _onLinkPressed,
+                widget.tourId,
                 widget.baseUrl,
                 widget.onTourIdSelected,
               );
@@ -505,7 +509,9 @@ class _EpubViewState extends State<EpubView> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => EpubViewTableOfRecommends(controller: _controller, baseUrl: widget.baseUrl,
+                    builder: (context) => EpubViewTableOfRecommends(controller: _controller,
+                      tourId: widget.tourId,
+                      baseUrl: widget.baseUrl,
                       onTourIdSelected: (tourId) {
                         widget.onTourIdSelected?.call(tourId);
                       }

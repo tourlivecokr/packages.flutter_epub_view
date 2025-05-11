@@ -4,6 +4,7 @@ import 'package:epub_view/src/data/models/chapter.dart';
 import 'package:epub_view/src/data/models/recommend.dart';
 import 'package:epub_view/src/ui/epub_view.dart';
 import 'package:epub_view/src/ui/recommend_item.dart';
+import 'package:epub_view/src/util/mixpanel_manager.dart';
 import 'package:flutter/material.dart';
 
 class EpubViewTableOfRecommends extends StatefulWidget {
@@ -12,6 +13,7 @@ class EpubViewTableOfRecommends extends StatefulWidget {
     this.padding,
     this.itemBuilder,
     this.loader,
+    this.tourId = 0,
     this.baseUrl = '',
     this.onTourIdSelected,
     Key? key,
@@ -26,6 +28,7 @@ class EpubViewTableOfRecommends extends StatefulWidget {
       int itemCount,
       )? itemBuilder;
   final Widget? loader;
+  final int tourId;
   final String baseUrl;
   final Function(int index)? onTourIdSelected;
 
@@ -79,11 +82,20 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfRecommends> {
                 margin: const EdgeInsets.only(bottom: 15),
                 child: InkWell(
                   onTap: () {
+                    MixpanelManager.init();
+                    MixpanelManager.instance?.track(
+                      'EventOn_ClickPlaylistFromEbook',
+                      properties: {
+                        'tour_id': widget.tourId.toString(),
+                        'track_title': recommends[index].element.text,
+                      }
+                    );
                     widget.controller.scrollTo(index: recommends[index].index);
                     Navigator.of(context).pop();
                   },
                   child: RecommendItem(
                     baseUrl: widget.baseUrl,
+                    tourId: widget.tourId,
                     attributes: Map<String, String>.from(recommends[index].element.attributes),
                     onTourIdSelected: widget.onTourIdSelected,
                   )

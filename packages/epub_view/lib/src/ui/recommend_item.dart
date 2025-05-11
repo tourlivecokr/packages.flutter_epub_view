@@ -1,16 +1,19 @@
 import 'dart:collection';
 
 import 'package:epub_view/src/ui/recommend_content_viewer_page.dart';
+import 'package:epub_view/src/util/mixpanel_manager.dart';
 import 'package:flutter/material.dart';
 
 class RecommendItem extends StatelessWidget {
   const RecommendItem({
     super.key,
+    required this.tourId,
     required this.baseUrl,
     this.onTourIdSelected,
     required this.attributes,
   });
 
+  final int tourId;
   final String baseUrl;
   final Function(int tourId)? onTourIdSelected;
   final Map<String, String> attributes;
@@ -98,13 +101,25 @@ class RecommendItem extends StatelessWidget {
                                   final trackImage = attributes['data-trackimage'] ?? '';
                                   final type = attributes['data-type'] ?? 'audio';
 
+                                  MixpanelManager.init();
+                                  MixpanelManager.instance?.track(
+                                      'EventOn_PlayAudioFromEbook',
+                                      properties: {
+                                        'tour_id': tourId.toString(),
+                                        'track_title': trackTitle,
+                                        'track_id': attributes['data-trackid'] ?? '',
+                                      }
+                                  );
+
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => RecommendContentViewerPage(
                                         baseUrl: baseUrl,
                                         type: type,
-                                        tourId: attributes['data-tourid'] ?? '',
-                                        tourTitle: trackTitle,
+                                        epubTourId: tourId.toString(),
+                                        trackTourId: attributes['data-tourid'] ?? '',
+                                        trackId: attributes['data-trackid'] ?? '',
+                                        trackTitle: trackTitle,
                                         imageUrl: trackImage,
                                         fileUrl: attributes['data-trackfile'] ?? '',
                                         onTourIdSelected: (tourId) {
