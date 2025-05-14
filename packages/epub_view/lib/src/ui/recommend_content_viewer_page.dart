@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:epub_view/src/util/mixpanel_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:chewie/chewie.dart';
 import 'package:intl/intl.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:video_player/video_player.dart';
 
 class RecommendContentViewerPage extends StatefulWidget {
@@ -37,9 +37,7 @@ class RecommendContentViewerPage extends StatefulWidget {
 }
 
 class _RecommendContentViewerPageState extends State<RecommendContentViewerPage> {
-  SoLoud? soLoud;
-  AudioSource? audioSource;
-  SoundHandle? soundHandle;
+  AudioPlayer? audioPlayer;
 
   VideoPlayerController? videoPlayerController;
   ChewieController? chewieController;
@@ -81,13 +79,8 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   }
 
   Future<void> disposeAudio() async {
-    if (soundHandle != null) {
-      await soLoud?.stop(soundHandle!);
-      soundHandle = null;
-    }
-    if (audioSource != null) {
-      await soLoud?.disposeSource(audioSource!);
-    }
+    audioPlayer?.stop();
+    audioPlayer?.dispose();
   }
 
   Future<void> disposeVideo() async {
@@ -96,9 +89,8 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   }
 
   Future<void> initAudio() async {
-    soLoud = SoLoud.instance;
-    await soLoud?.init();
-    audioSource = await soLoud?.loadUrl(widget.fileUrl ?? '');
+    audioPlayer = AudioPlayer();
+    audioPlayer?.setUrl(widget.fileUrl ?? '');
   }
 
   Future<void> initVideo() async {
@@ -241,14 +233,10 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                               alignment: Alignment.center,
                               child: InkWell(
                                 onTap: () async {
-                                  if (soundHandle != null) {
-                                    await soLoud?.stop(soundHandle!);
-                                    soundHandle = null;
-                                    setState(() {});
-                                    return;
-                                  }
-                                  if (audioSource != null) {
-                                    soundHandle = await soLoud?.play(audioSource!);
+                                  if (audioPlayer?.playing == true) {
+                                    audioPlayer?.pause();
+                                  } else {
+                                    audioPlayer?.play();
                                   }
                                   setState(() {});
                                 },
@@ -261,7 +249,7 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                                   ),
                                   child: Center(
                                     child: Icon(
-                                      soundHandle == null ? Icons.play_arrow : Icons.stop,
+                                      audioPlayer?.playing == true ? Icons.stop : Icons.play_arrow,
                                       size: 36,
                                       color: Colors.white,
                                     ),
@@ -345,9 +333,8 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                                   }
                               );
 
-                              if (soundHandle != null) {
-                                await soLoud?.stop(soundHandle!);
-                              soundHandle = null;
+                              if (audioPlayer?.playing == true) {
+                                audioPlayer?.stop();
                               }
                               await chewieController?.pause();
 
