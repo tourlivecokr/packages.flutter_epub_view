@@ -397,17 +397,7 @@ class _EpubViewState extends State<EpubView> {
                 },
               ),
               TagExtension(
-                tagsToExtend: {"audio"},
-                builder: (spanContext) {
-                  return RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
-                    onTourIdSelected: (tourId) {
-                      onTourIdSelected?.call(tourId);
-                    }
-                  );
-                }
-              ),
-              TagExtension(
-                tagsToExtend: {"video"},
+                tagsToExtend: {"player"},
                 builder: (spanContext) {
                   return RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
                     onTourIdSelected: (tourId) {
