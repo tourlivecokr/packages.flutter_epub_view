@@ -400,7 +400,7 @@ class _EpubViewState extends State<EpubView> {
                 tagsToExtend: {"player"},
                 builder: (spanContext) {
                   return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 30),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
                     child: RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
                       onTourIdSelected: (tourId) {
                         onTourIdSelected?.call(tourId);

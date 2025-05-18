@@ -89,25 +89,49 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
   }
 
   Future<void> initAudio() async {
-    audioPlayer = AudioPlayer();
-    audioPlayer?.setUrl(widget.fileUrl ?? '');
+    try {
+      audioPlayer = AudioPlayer();
+      audioPlayer?.setUrl(widget.fileUrl ?? '');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('오디오를 재생할 수 없습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   Future<void> initVideo() async {
-    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.fileUrl ?? ''));
+    try {
+      videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.fileUrl ?? ''));
 
-    if (videoPlayerController == null) {
-      return;
+      if (videoPlayerController == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('비디오를 재생할 수 없습니다.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
+      await videoPlayerController!.initialize();
+
+      chewieController = ChewieController(
+          videoPlayerController: videoPlayerController!,
+          autoPlay: true,
+          aspectRatio: 375.0 / 210.0
+      );
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('비디오를 재생할 수 없습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
-
-    await videoPlayerController!.initialize();
-
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController!,
-      autoPlay: true,
-      aspectRatio: 375.0 / 210.0
-    );
-    setState(() {});
   }
 
   Future<void> fetchTourData(int tourId) async {
@@ -179,6 +203,8 @@ class _RecommendContentViewerPageState extends State<RecommendContentViewerPage>
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           )
                         ),
                         InkWell(
