@@ -61,7 +61,7 @@ class _EpubViewTableOfContentsState extends State<EpubViewTableOfRecommends> {
           height: 26.0 / 18.0
         )),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.keyboard_arrow_left, color: Color(0xFF000000), size: 24,),
           onPressed: () {
             Navigator.of(context).pop();
           },
