@@ -23,163 +23,160 @@ class RecommendItem extends StatelessWidget {
     final trackTitle = attributes['data-tracktitle'] ?? '';
     final trackContent = attributes['data-content'] ?? '';
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 30),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Image.network(attributes['data-creatorimage'] ?? '', width: 32, height: 32, errorBuilder: (context,_,__) {
-              return Container(
-                width: 32,
-                height: 32,
-                decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle
-                ),
-              );
-            }),
-          ),
-          const SizedBox(width: 5,),
-          Expanded(
-              child: Column(
-                children: [
-                  const SizedBox(height: 8,),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 13,
-                        height: 13,
-                        child: CustomPaint(
-                          painter: TrianglePainter(),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Image.network(attributes['data-creatorimage'] ?? '', width: 32, height: 32, errorBuilder: (context,_,__) {
+            return Container(
+              width: 32,
+              height: 32,
+              decoration: const BoxDecoration(
+                  color: Colors.grey,
+                  shape: BoxShape.circle
+              ),
+            );
+          }),
+        ),
+        const SizedBox(width: 5,),
+        Expanded(
+            child: Column(
+              children: [
+                const SizedBox(height: 8,),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 13,
+                      height: 13,
+                      child: CustomPaint(
+                        painter: TrianglePainter(),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: const BoxDecoration(
+                            color: Color(0xffF9F9F9),
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            )
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('가이드 꿀팁!',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xffFF730D),
+                                  height: 20.0 / 15.0
+                              ),
+                            ),
+                            Text(trackTitle,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xff1A1A1A),
+                                  height: 20.0 / 15.0
+                              ),
+                            ),
+                            const SizedBox(height: 4,),
+                            Text(trackContent,
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff1A1A1A),
+                                  height: 18.0 / 14.0
+                              ),
+                            ),
+                            const SizedBox(height: 15,),
+                            InkWell(
+                              onTap: () {
+                                final trackImage = attributes['data-trackimage'] ?? '';
+                                final type = attributes['data-type'] ?? 'audio';
+
+                                MixpanelManager.init();
+                                MixpanelManager.instance?.track(
+                                    'EventOn_PlayAudioFromEbook',
+                                    properties: {
+                                      'tour_id': tourId.toString(),
+                                      'track_title': trackTitle,
+                                      'track_id': attributes['data-trackid'] ?? '',
+                                    }
+                                );
+
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => RecommendContentViewerPage(
+                                      baseUrl: baseUrl,
+                                      type: type,
+                                      epubTourId: tourId.toString(),
+                                      trackTourId: attributes['data-tourid'] ?? '',
+                                      trackId: attributes['data-trackid'] ?? '',
+                                      trackTitle: trackTitle,
+                                      imageUrl: trackImage,
+                                      fileUrl: attributes['data-trackfile'] ?? '',
+                                      onTourIdSelected: (tourId) {
+                                        onTourIdSelected?.call(tourId);
+                                      },
+                                    )
+                                  )
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: const Offset(0, 2),
+                                          blurRadius: 4,
+                                          color: Colors.black.withOpacity(0.05)
+                                      )
+                                    ]
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xffFF730D)
+                                      ),
+                                      child: const Center(
+                                        child: Icon(Icons.play_arrow, color: Colors.white, size: 16),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    const Text('가이드 설명 듣기',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xffFF730D),
+                                          height: 18.0 / 14.0
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(
-                              color: Color(0xffF9F9F9),
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20),
-                              )
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('가이드 꿀팁!',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xffFF730D),
-                                    height: 20.0 / 15.0
-                                ),
-                              ),
-                              Text(trackTitle,
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xff1A1A1A),
-                                    height: 20.0 / 15.0
-                                ),
-                              ),
-                              const SizedBox(height: 4,),
-                              Text(trackContent,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xff1A1A1A),
-                                    height: 18.0 / 14.0
-                                ),
-                              ),
-                              const SizedBox(height: 15,),
-                              InkWell(
-                                onTap: () {
-                                  final trackImage = attributes['data-trackimage'] ?? '';
-                                  final type = attributes['data-type'] ?? 'audio';
-
-                                  MixpanelManager.init();
-                                  MixpanelManager.instance?.track(
-                                      'EventOn_PlayAudioFromEbook',
-                                      properties: {
-                                        'tour_id': tourId.toString(),
-                                        'track_title': trackTitle,
-                                        'track_id': attributes['data-trackid'] ?? '',
-                                      }
-                                  );
-
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => RecommendContentViewerPage(
-                                        baseUrl: baseUrl,
-                                        type: type,
-                                        epubTourId: tourId.toString(),
-                                        trackTourId: attributes['data-tourid'] ?? '',
-                                        trackId: attributes['data-trackid'] ?? '',
-                                        trackTitle: trackTitle,
-                                        imageUrl: trackImage,
-                                        fileUrl: attributes['data-trackfile'] ?? '',
-                                        onTourIdSelected: (tourId) {
-                                          onTourIdSelected?.call(tourId);
-                                        },
-                                      )
-                                    )
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(100),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: const Offset(0, 2),
-                                            blurRadius: 4,
-                                            color: Colors.black.withOpacity(0.05)
-                                        )
-                                      ]
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0xffFF730D)
-                                        ),
-                                        child: const Center(
-                                          child: Icon(Icons.play_arrow, color: Colors.white, size: 16),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10,),
-                                      const Text('가이드 설명 듣기',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xffFF730D),
-                                            height: 18.0 / 14.0
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              )
-          )
-        ],
-      ),
+                    )
+                  ],
+                )
+              ],
+            )
+        )
+      ],
     );
   }
 }

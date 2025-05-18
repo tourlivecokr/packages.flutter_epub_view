@@ -399,10 +399,13 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"player"},
                 builder: (spanContext) {
-                  return RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
-                    onTourIdSelected: (tourId) {
-                      onTourIdSelected?.call(tourId);
-                    }
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 30),
+                    child: RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
+                      onTourIdSelected: (tourId) {
+                        onTourIdSelected?.call(tourId);
+                      }
+                    ),
                   );
                 }
               ),
@@ -440,7 +443,7 @@ class _EpubViewState extends State<EpubView> {
                           height: 26.0 / 18.0
                         ),
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(height: 20,),
                       RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
                         onTourIdSelected: (tourId) {
                           onTourIdSelected?.call(tourId);
@@ -451,7 +454,8 @@ class _EpubViewState extends State<EpubView> {
                         height: 1,
                         thickness: 1,
                         color: Color(0xFFE1E1E1),
-                      )
+                      ),
+                      const SizedBox(height: 30,)
                     ],
                   );
                 }
