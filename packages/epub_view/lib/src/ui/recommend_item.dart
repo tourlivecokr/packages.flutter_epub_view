@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:epub_view/src/ui/recommend_content_viewer_page.dart';
 import 'package:epub_view/src/util/mixpanel_manager.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,15 @@ class RecommendItem extends StatelessWidget {
                             ),
                             const SizedBox(height: 15,),
                             InkWell(
-                              onTap: () {
+                              onTap: () async {
+                                try {
+                                  await checkNetworkAndShowDialog(context);
+                                } catch (e) {
+                                  // 예외 발생 시 처리
+                                  print('네트워크 연결이 필요합니다: $e');
+                                  return;
+                                }
+
                                 final trackImage = attributes['data-trackimage'] ?? '';
                                 final type = attributes['data-type'] ?? 'audio';
 
@@ -178,6 +187,92 @@ class RecommendItem extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Future<void> checkNetworkAndShowDialog(BuildContext context) async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    final isConnected = connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (!isConnected) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.3),
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(30),
+                  child: const Column(
+                    children: [
+                      Text('네트워크에 문제가 있어요', style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      )),
+                      SizedBox(height: 8,),
+                      Text('Wi-Fi를 사용하거나 데이터 연결이\n되었는지 확인 후 다시 시도해주세요.', style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF8A8A8A),
+                      )),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          throw Exception('네트워크 연결이 필요합니다.');
+                        },
+                        child: Container(
+                          color: const Color(0xFFF9F9F9),
+                          child: const Center(
+                            child: Text('확인', style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF1A1A1A)
+                            )),
+                          ),
+                        )
+                      )
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          Navigator.of(context).pop();
+                          await checkNetworkAndShowDialog(context);
+                        },
+                        child: Container(
+                          color: const Color(0xFFFF730D),
+                          child: const Center(
+                            child: Text('다시 시도하기', style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white
+                            )),
+                          ),
+                        )
+                      )
+                    )
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+      );
+    }
   }
 }
 
