@@ -192,8 +192,8 @@ class RecommendItem extends StatelessWidget {
   Future<void> checkNetworkAndShowDialog(BuildContext context) async {
     final connectivityResult = await Connectivity().checkConnectivity();
 
-    final isConnected = connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi);
+    final isConnected = connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi;
 
     if (!isConnected) {
       showDialog(
