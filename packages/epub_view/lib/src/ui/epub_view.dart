@@ -414,6 +414,8 @@ class _EpubViewState extends State<EpubView> {
                 builder: (spanContext) {
                   final dataTitle = spanContext.attributes['data-title'].toString().replaceAll(r'\n', '\n') ?? '';
                   final dataBody = spanContext.attributes['data-body'].toString().replaceAll(r'\n', '\n') ?? '';
+
+                  final player = spanContext.elementChildren.firstWhereOrNull((element) => element.localName == 'player');
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -444,11 +446,12 @@ class _EpubViewState extends State<EpubView> {
                         ),
                       ),
                       const SizedBox(height: 20,),
-                      RecommendItem(attributes: spanContext.attributes, tourId: tourId, baseUrl: baseUrl,
-                        onTourIdSelected: (tourId) {
-                          onTourIdSelected?.call(tourId);
-                        }
-                      ),
+                      if (player != null)
+                        RecommendItem(attributes: Map<String, String>.from(player.attributes), tourId: tourId, baseUrl: baseUrl,
+                          onTourIdSelected: (tourId) {
+                            onTourIdSelected?.call(tourId);
+                          }
+                        ),
                       const SizedBox(height: 12,),
                       const Divider(
                         height: 1,
