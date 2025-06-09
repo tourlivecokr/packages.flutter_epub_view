@@ -412,9 +412,8 @@ class _EpubViewState extends State<EpubView> {
               TagExtension(
                 tagsToExtend: {"intro"},
                 builder: (spanContext) {
-                  final dataTitle = spanContext.attributes['data-title'].toString().replaceAll(r'\n', '\n') ?? '';
-                  final dataBody = spanContext.attributes['data-body'].toString().replaceAll(r'\n', '\n') ?? '';
-
+                  final dataTitle = spanContext.elementChildren.firstWhereOrNull((element) => element.localName == 'data-title')?.text ?? '';
+                  final dataBody = spanContext.elementChildren.firstWhereOrNull((element) => element.localName == 'data-body')?.text ?? '';
                   final player = spanContext.elementChildren.firstWhereOrNull((element) => element.localName == 'player');
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
