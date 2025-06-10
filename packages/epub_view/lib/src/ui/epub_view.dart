@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:easy_image_viewer/easy_image_viewer.dart';
@@ -419,30 +418,33 @@ class _EpubViewState extends State<EpubView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(dataTitle,
-                        style: const TextStyle(
+                        style: options.textStyle,
+                        /*style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
                           color: Color(0xff1A1A1A),
                           height: 1.3
-                        ),
+                        ),*/
                       ),
                       const SizedBox(height: 15,),
                       Text(dataBody,
-                        style: const TextStyle(
+                        style: options.textStyle,
+                        /*style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Color(0xff3A3A3A),
                           height: 22.0 / 16.0
-                        ),
+                        ),*/
                       ),
                       const SizedBox(height: 46,),
-                      const Text('샘플',
-                        style: TextStyle(
+                      Text('샘플',
+                        style: options.textStyle,
+                        /*style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: Color(0xff3A3A3A),
                           height: 26.0 / 18.0
-                        ),
+                        ),*/
                       ),
                       const SizedBox(height: 20,),
                       if (player != null)
