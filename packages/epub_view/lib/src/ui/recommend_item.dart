@@ -242,6 +242,11 @@ class RecommendItem extends StatelessWidget {
                             child: Container(
                               height: 50,
                               color: const Color(0xFFF9F9F9),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                )
+                              ),
                               child: const Center(
                                 child: Text('확인', style: TextStyle(
                                   fontSize: 15,
@@ -261,6 +266,11 @@ class RecommendItem extends StatelessWidget {
                             child: Container(
                               height: 50,
                               color: const Color(0xFFFF730D),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(15),
+                                )
+                              ),
                               child: const Center(
                                 child: Text('다시 시도하기', style: TextStyle(
                                   fontSize: 16,
