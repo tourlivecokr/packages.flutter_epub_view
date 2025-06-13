@@ -241,8 +241,8 @@ class RecommendItem extends StatelessWidget {
                             },
                             child: Container(
                               height: 50,
-                              color: const Color(0xFFF9F9F9),
                               decoration: const BoxDecoration(
+                                color: const Color(0xFFF9F9F9),
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(15),
                                 )
@@ -265,8 +265,8 @@ class RecommendItem extends StatelessWidget {
                             },
                             child: Container(
                               height: 50,
-                              color: const Color(0xFFFF730D),
                               decoration: const BoxDecoration(
+                                color: const Color(0xFFFF730D),
                                 borderRadius: BorderRadius.only(
                                   bottomRight: Radius.circular(15),
                                 )
