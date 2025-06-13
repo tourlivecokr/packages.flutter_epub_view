@@ -98,7 +98,10 @@ class RecommendItem extends StatelessWidget {
                             InkWell(
                               onTap: () async {
                                 try {
-                                  await checkNetworkAndShowDialog(context);
+                                  final result = await checkNetworkAndShowDialog(context);
+                                  if (result == false) {
+                                    return; // 네트워크가 연결되지 않은 경우 함수 종료
+                                  }
                                 } catch (e) {
                                   // 예외 발생 시 처리
                                   print('네트워크 연결이 필요합니다: $e');
@@ -189,90 +192,97 @@ class RecommendItem extends StatelessWidget {
     );
   }
 
-  Future<void> checkNetworkAndShowDialog(BuildContext context) async {
+  Future<bool> checkNetworkAndShowDialog(BuildContext context) async {
     final connectivityResult = await Connectivity().checkConnectivity();
 
     final isConnected = connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi;
 
     if (!isConnected) {
-      showDialog(
+      await showDialog(
         context: context,
         barrierDismissible: false,
         barrierColor: Colors.black.withOpacity(0.3),
         builder: (context) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(30),
-                  child: const Column(
-                    children: [
-                      Text('네트워크에 문제가 있어요', style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      )),
-                      SizedBox(height: 8,),
-                      Text('Wi-Fi를 사용하거나 데이터 연결이\n되었는지 확인 후 다시 시도해주세요.', style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF8A8A8A),
-                      )),
-                    ],
-                  ),
-                ),
-                Row(
+          return Dialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: IntrinsicHeight(
+              child: Container(
+                width: 300,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          throw Exception('네트워크 연결이 필요합니다.');
-                        },
-                        child: Container(
-                          color: const Color(0xFFF9F9F9),
-                          child: const Center(
-                            child: Text('확인', style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF1A1A1A)
-                            )),
-                          ),
-                        )
-                      )
+                    Container(
+                      padding: const EdgeInsets.all(30),
+                      child: const Column(
+                        children: [
+                          Text('네트워크에 문제가 있어요', style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                          )),
+                          SizedBox(height: 8,),
+                          Text('Wi-Fi를 사용하거나 데이터 연결이\n되었는지 확인 후 다시 시도해주세요.', style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF8A8A8A),
+                          )),
+                        ],
+                      ),
                     ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          await checkNetworkAndShowDialog(context);
-                        },
-                        child: Container(
-                          color: const Color(0xFFFF730D),
-                          child: const Center(
-                            child: Text('다시 시도하기', style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white
-                            )),
-                          ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              throw Exception('네트워크 연결이 필요합니다.');
+                            },
+                            child: Container(
+                              height: 50,
+                              color: const Color(0xFFF9F9F9),
+                              child: const Center(
+                                child: Text('확인', style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF1A1A1A)
+                                )),
+                              ),
+                            )
+                          )
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              await checkNetworkAndShowDialog(context);
+                            },
+                            child: Container(
+                              height: 50,
+                              color: const Color(0xFFFF730D),
+                              child: const Center(
+                                child: Text('다시 시도하기', style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white
+                                )),
+                              ),
+                            )
+                          )
                         )
-                      )
+                      ],
                     )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           );
         },
       );
+      return false; // 네트워크가 연결되지 않은 경우 false 반환
     }
+    return true; // 네트워크가 연결된 경우 true 반환
   }
 }
 
